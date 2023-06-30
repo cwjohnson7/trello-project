@@ -3,12 +3,14 @@ const http = require('http');
 const bodyParser = require('body-parser');
 const app = express();
 const router = require('./router')
-const cors = require('cors');
 const mongoose  = require('mongoose');
+const cors = require('cors');
+const keys = require('./config/keys');
+
 
 //the path to the mongodb URI will eventually be referenced as keys.MONGODB_URI
 //in /server/config/keys.js
-mongoose.connect('mongodb://127.0.0.1/trello-project', {
+mongoose.connect(keys.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
@@ -35,8 +37,8 @@ router(app);
 //--------------------------------------
 
 // Server Setup
-// const port = process.env.PORT || 5000;
-const port = 5000; 
+
+const port = process.env.PORT || 5000;
 const server = http.createServer(app);
 server.listen(port);
 console.log('Server is listening on port: ', port);

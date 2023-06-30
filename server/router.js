@@ -8,4 +8,20 @@ module.exports = function(app) {
   //this gets the selected board based on the board's _id using findById and req.params... it should show all the list
   app.get('/boards/:board')
 
+  //create a new board
+  app.post('/boards')
+
+  //create a new list on a specific board
+  app.post('/boards/:board/lists')
+
+  //add a card to a list
+  app.post('/boards/:board/:list/cards')
+
+  //get the card detail for one card on a specific list
+  app.get('/board/:list/:card')
+
+  //
+
+
+
 }

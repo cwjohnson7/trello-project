@@ -1,6 +1,8 @@
+const Authentication = require("./controllers/authentication")
+
 module.exports = function(app) {
   //for existing users to login. can add another post route for /auth/signup if needed.
-  app.post('/auth/signin')
+  app.post('/auth/signin', Authentication.addOrg)
 
   //after sigin-in, user gets all boards associated with their org, this is for the homepage
   app.get('/current_user/boards')

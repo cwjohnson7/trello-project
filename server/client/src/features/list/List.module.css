@@ -1,0 +1,11 @@
+.targetList {
+  margin-top: 200px;
+  min-height: 100px;
+  max-width: 45%;
+  border: solid 5px hsl(0, 69%, 35%);
+}
+.sourceColumn {
+  min-height: 100px;
+  border: solid 2px hsl(0, 7%, 15%);
+  max-width: 45%;
+}

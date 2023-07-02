@@ -1,0 +1,13 @@
+React Drag-n-Drop notes:
+
+•	Draggable component (card), must accept “id” and “text” props. Draggable component must have a ref={drag}. Where “drag” is destructured from useDrag() hook; “drag” allows us to track which component that is being dragged.
+const [ {isDragging }, drag ] = useDrag( () => {
+type: “card”,
+item: {id: id, text: text},
+collect: () => {}
+})
+•	Droppable component (list), must use useDrop() hook: 
+const [ {isOver}, drop ] = useDrop({
+ accept: “type string”,    // what kind of element types does this component accept?
+ drop: (card) => addCardToBoard(card.id) // function that runs whenever we drop something into this component
+})

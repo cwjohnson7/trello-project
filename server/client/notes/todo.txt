@@ -1,0 +1,5 @@
+Redux Toolkit:
+
+Create action moveCard:
+- find a way to get ID of Drag Source List, the ID of Drop Source List, ID of Card that is being moved. 
+

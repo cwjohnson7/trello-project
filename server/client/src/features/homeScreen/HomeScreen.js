@@ -5,8 +5,6 @@ import List from '../list/List';
 // HomeScreen Component
 const HomeScreen = () => {
   const boards = useSelector((state) => state.homeScreen.boards);
-  console.log('below are boards from redux');
-  console.log(boards);
 
   return (
     <div>

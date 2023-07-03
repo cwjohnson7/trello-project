@@ -24,6 +24,9 @@ const List = ({ boardId, listId }) => {
   // Make List Droppable and track is List is being dropped (isOver) via monitor funciton of DnD state variable
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
     accept: ItemTypes.CARD,
+    canDrop: (item, monitor) => {
+      return item.listId !== listId;
+    },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
@@ -48,10 +51,10 @@ const List = ({ boardId, listId }) => {
       ref={drop}
       style={{ backgroundColor: isOver ? "blue" : "white" }}
     >
-      <p>{listName}</p>
+      <p style={{'text-align':'center', 'background-color':'orange', }}>{listName}</p>
       {/* {canDrop ? "Release to drop" : "Drag a box here"} */}
       {cards.map((card) => (
-        <Card key={card.id} id={card.id} text={card.name} listId={listId} />
+        <Card key={card._id} id={card._id} name={card.name} listId={listId} />
       ))}
     </div>
   );

@@ -1,7 +1,28 @@
-Redux Toolkit:
+07/03/23 Meeting note:
+  Backend DB is a single source of truth. Changes made to cards  that are performed by client will have to pass necessary data to backend where data receives CRUD operation, and is returned back to redux where app state gets updated and re-rendered.  (moveCard action creator for now, others added as app grows ).
+  This ensures a unidirectonal data flow (MVC Pattern).
+
+Redux Toolkit ToDos:
+
 Create following slices and action creators:
-dragAndDrop slice: startDrag/stopDrag action creators:  use to change UI elements
-moveCard: change state boards' composition depending on user dragging cards from list to list; 
+- dragAndDrop slice: startDrag/stopDrag action creators:  use to change UI elements
+- moveCard: change state boards' composition depending on user dragging cards from list to list; 
+
+Issues at hand:
+
+- moveCard action does not pass cardId to target list
+- moveCard fails to delete card from source list
+- target lists allow duplicate cards
+- source list allows card to be dropped into same list and causes it to duplicate card in the source list
+
+
+
+
+
+
+
+
+
 
 
 Data Flow: 

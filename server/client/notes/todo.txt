@@ -1,5 +1,24 @@
 Redux Toolkit:
+Create following slices and action creators:
+dragAndDrop slice: startDrag/stopDrag action creators:  use to change UI elements
+moveCard: change state boards' composition depending on user dragging cards from list to list; 
 
-Create action moveCard:
-- find a way to get ID of Drag Source List, the ID of Drop Source List, ID of Card that is being moved. 
 
+Data Flow: 
+
+REdux State gets hydrated from backend api; (for now hardcoded);
+
+(Boards and Cards get their props from Redux State: const boards = useSelecotor(state => state.boards);)
+
+DRAG PORTION OF moveCard action: Movig a card from one board to another means filtering Source Board array for Cards whos ids are not equal to source card;
+
+DROP PORTION of moveCard action: means adding a source card to the Target Boad array.
+
+Props needed to obtain during drag and drop:
+- DRAG SOURCE BOARD ID
+- DROP SOUCE BOARD ID
+- CARD ID
+
+
+Component hierarchy and prop management:
+HomeScreen renders Board and Board renders Cards 

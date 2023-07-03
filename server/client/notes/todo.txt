@@ -5,15 +5,17 @@
 Redux Toolkit ToDos:
 
 Create following slices and action creators:
-- dragAndDrop slice: startDrag/stopDrag action creators:  use to change UI elements
-- moveCard: change state boards' composition depending on user dragging cards from list to list; 
 
-Issues at hand:
+- populateStateThunk: async request to backend for application state data;
+- add moveCardThunk: async request to backend with data that needs to be updated;
+- add extraReducers for moveCardthunk;
 
-- moveCard action does not pass cardId to target list
-- moveCard fails to delete card from source list
-- target lists allow duplicate cards
-- source list allows card to be dropped into same list and causes it to duplicate card in the source list
+List Functionality:
+- add "add a card button"
+  1. Save input text in variable name;
+  2. Generate random 5 charachter id string and save it in variable _id;
+  3. Refactor handleSubmitClick to dispatch "addCard" action with payload containing name, _id, boardId, listId;
+
 
 
 

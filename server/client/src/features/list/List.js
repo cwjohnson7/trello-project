@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Card from "../card/Card";
 import styles from "./List.module.css";
 import ItemTypes from "../utilities/ItemTypes";
+import AddItem from "../utilities/AddItem";
 import { useDrop } from "react-dnd";
 import { useSelector } from "react-redux/es/hooks/useSelector";
 import { useDispatch } from "react-redux";
@@ -56,6 +57,7 @@ const List = ({ boardId, listId }) => {
       {cards.map((card) => (
         <Card key={card._id} id={card._id} name={card.name} listId={listId} />
       ))}
+      <AddItem title="Add a card" boardId={boardId} listId={listId}/>
     </div>
   );
 };

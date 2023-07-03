@@ -86,13 +86,27 @@ export const homeScreenSlice = createSlice({
       // add card to target list
       targetList.cards.push({
         _id: action.payload.cardId,
-        name: action.payload.cardName
+        name: action.payload.cardName,
         // other card properties...
       });
+    },
+    addCard: (state, action) => {
+      // find board
+      const board = state.boards.find(
+        (board) => board._id === action.payload.boardId
+      );
+      if (!board) return;
+
+      // find list in the board
+      const list = board.lists.find(
+        (list) => list._id === action.payload.listId
+      );
+      if (!list) return;
+      list.cards.push({ _id: action.payload._id, name: action.payload.inputValue });
     },
   },
   extraReducers: (builder) => {},
 });
 
-export const { moveCard } = homeScreenSlice.actions;
+export const { moveCard, addCard } = homeScreenSlice.actions;
 export default homeScreenSlice.reducer;

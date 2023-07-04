@@ -1,11 +1,27 @@
 const Board = require("../models/board");
+const Organization = require("../models/organization")
 
-exports.addBoard = function (req, res) {
-  const boardName = req.body.boardName;
-  console.log(req.body);
-  const newBoard = new Board({
-    name: req.body.boardName
-  });
-//response isn't including  the name entered in the new org above
-  res.send(newBoard);
+exports.addBoard = function (req, res, next) {
+  const id = req.params.org;
+
+  Organization.findById(id)
+  .then((result) => {
+    console.log('org query: ', result)
+    // const boardName = req.body.boardName;
+    console.log('req.body: ', req.body);
+    const board = new Board({
+      title: req.body.boardName,
+      org: result._id
+    });
+    board.save();
+    console.log('board saved: ', board);
+    result.boards.push(board);
+    result.save();
+    console.log('org query after adding board: ', result);
+    res.send(board);
+  })
+  .catch((err) => {
+    console.log(err);
+    res.json(err)
+  })
 }

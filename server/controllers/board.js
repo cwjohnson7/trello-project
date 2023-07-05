@@ -2,7 +2,7 @@ const Board = require("../models/board");
 const Organization = require("../models/organization")
 
 exports.addBoard = function (req, res, next) {
-  const id = req.params.org;
+  const id = req.body.orgId;
 
   Organization.findById(id)
   .then((result) => {
@@ -25,3 +25,7 @@ exports.addBoard = function (req, res, next) {
     res.json(err)
   })
 }
+
+// exports.getUserBoards = function (req, res, next) {
+  
+// }

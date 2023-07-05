@@ -12,6 +12,10 @@ exports.addOrg = function (req, res) {
   res.send(newOrg);
 }
 
+// exports.signIn = function ( req, res ) {
+
+// }
+
 exports.signUp = function (req, res, next) {
 
   const email = req.body.email;
@@ -22,30 +26,28 @@ exports.signUp = function (req, res, next) {
   .then((err, result) => {
     if(err) { return next(err)}
 
-  // If a user with email does exist, return an error
-  if (result) {
-    return res.status(422).send({ error: 'Email is in use' });
-  }
-  
-  Organization.findOne({ name: org }).then((err, existingOrg) => {
-    if (!existingOrg) { 
-      let newOrg = new Organization({ name: org })
-      newOrg.save();
-      console.log('NewOrg: ', newOrg);
+    // If a user with email does exist, return an error
+    if (result) {
+      return res.status(422).send({ error: 'Email is in use' });
     }
-  })
-
-  const user = new User({
-    email: req.body.email,
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    org: req.body.orgName
-  })
-
-  user.save();
-
-  res.send(user)
-
+    
+    Organization.findOne({ name: org }).then((existingOrg) => {
+      if (!existingOrg) { 
+        let newOrg = new Organization({ name: org })
+        newOrg.save();
+        console.log('NewOrg: ', newOrg);
+      }
+      const user = new User({
+        email: req.body.email,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        org: existingOrg._id
+      })
+    
+      user.save();
+    
+      res.send(user)
+    })
   })
   
   

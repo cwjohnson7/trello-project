@@ -5,30 +5,30 @@ const Card = require("./controllers/card");
 
 module.exports = function(app) {
   //for existing users to login. can add another post route for /auth/signup if needed.
-  app.post('/auth/signin', Authentication.addOrg)
-
+  app.post('/auth/addOrg', Authentication.addOrg)
   app.post('/auth/signup', Authentication.signUp)
-
-  //after sigin-in, user gets all boards associated with their org, this is for the homepage
-  app.get('/:current_user/boards')
-
-  //get the selected board based on the board's _id using findById and req.params... it should show all the lists
-  app.get('/boards/:board')
+  // app.post('/auth/signin', Authentication.signIn)
+  
 
   //create a new board
-  app.post('/:org/boards', Board.addBoard)
+  app.post('/api/addBoard', Board.addBoard)
+  //after sigin-in, user gets all boards associated with their org, this is for the homepage
+  // app.get('/api/getUserBoards', Board.getUserBoards)
 
   //create a new list on a specific board
-  app.post('/:board/lists', List.addList)
+  app.post('/api/addList', List.addList)
+  // app.post('/api/moveList', List.moveList)
+  //get the selected board's list based on the board's _id using findById... it should show all the lists on that Board not archived
+  // app.get('/api/getBoardLists', List.getBoardLists)
 
-  //add a card to a specific list
-  app.post('/:list/cards', Card.addCard)
+  // add/move/remove a card 
+  app.post('/api/addCard', Card.addCard)
+  // app.post('/api/moveCard', Card.moveCard)
+  // app.post('/api/removeCard', Card.removeCard)
 
   //get the card detail for one card on a specific list
-  app.get('/cards/:card')
+  // app.get('/cards/:card')
 
-  //update the lists' cards arrays when a card gets moved to a different list
-  app.post('/:list/:card')
 
 
 

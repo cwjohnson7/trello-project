@@ -2,7 +2,7 @@ const List = require("../models/list");
 const Board = require("../models/board");
 
 exports.addList = function (req, res, next) {
-  const id = req.params.board;
+  const id = req.body.boardId;
 
   Board.findById(id)
   .then((result) => {
@@ -11,7 +11,8 @@ exports.addList = function (req, res, next) {
     console.log('req.body: ', req.body);
     const list = new List({
       name: req.body.listName,
-      board: result._id
+      board: result._id,
+      org: result.org
     });
     list.save();
     console.log('list saved: ', list);
@@ -26,6 +27,9 @@ exports.addList = function (req, res, next) {
   })
 }
 
-exports.moveList = function (req, res, next) {
+// exports.moveList = function (req, res, next) {
 
-}
+// }
+
+// exports.getBoardLists = function (req, res, next) {
+// }

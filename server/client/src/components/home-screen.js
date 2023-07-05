@@ -3,16 +3,16 @@ import Container from "react-bootstrap/Container";
 import Card from "react-bootstrap/Card";
 import Row from "react-bootstrap/Row";
 
-const BoardScreen = () => {
+const HomeScreen = () => {
   
   return(
-    <BoardContainer>
+    <HomeScreenContainer>
       <Container>
         <h2>Organization Workspace</h2>
         <hr />
 
         <Row style={{  }}>
-          <CardContainer>
+          <CardContainer >
             <Card style={{ height: "8rem", margin: "0 10px 10px 0", background: "#B4F8C8" }}>
               <Card.Body className="text-center">
                 <Card.Title>Board Title</Card.Title>
@@ -62,13 +62,13 @@ const BoardScreen = () => {
         </Row>
 
       </Container>
-    </BoardContainer>
+    </HomeScreenContainer>
   )
 };
 
-export default BoardScreen;
+export default HomeScreen;
 
-const BoardContainer = styled.div`
+const HomeScreenContainer = styled.div`
   padding-top: 160px;
 `;
 

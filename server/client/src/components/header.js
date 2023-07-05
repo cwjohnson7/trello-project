@@ -12,7 +12,7 @@ import styled from "styled-components";
 // My simple idea for Login Info is to have a dropdown that says "Please Log In" or
 //   if user is logged in then it will say "Username is currently logged in" and
 //   maybe add a Sign Out but there as well.
-const Header = () => {
+const Header = (props) => {
 
   return (
     <NavContainer>
@@ -22,7 +22,7 @@ const Header = () => {
             <Image src="favicon.ico" fluid />
           </Col>
           <Col md={{ span: 8, offset: 1 }}>
-            <h1><strong>Trello Jr</strong></h1>
+            <h1 className="display-3"><strong>Trello Jr</strong></h1>
           </Col>
           <Col md={2}>
             <p>Login Info</p>

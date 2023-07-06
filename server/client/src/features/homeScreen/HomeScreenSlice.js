@@ -139,9 +139,13 @@ export const homeScreenSlice = createSlice({
       const board = state.boards.find(
         (board) => board._id === action.payload.boardId
       );
-      if (!board) return;
+      if (!board) {
+        console.log('no board found inside addList reducer!');
+        return;
+      }
+      
       // add list to board
-      board.push({
+      board.lists.push({
         _id: action.payload._id,
         name: action.payload.inputValue,
         cards: [],
@@ -248,7 +252,7 @@ export const homeScreenSlice = createSlice({
 });
 //const { sourceListId, targetListId, cardId } = req.body;
 
-export const { moveCard, addCard } = homeScreenSlice.actions;
+export const { moveCard, addCard, addList, addBoard } = homeScreenSlice.actions;
 export default homeScreenSlice.reducer;
 
 // following section is dedicated to memoised selector functions returned by "reselect" library

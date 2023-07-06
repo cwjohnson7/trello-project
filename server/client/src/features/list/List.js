@@ -67,7 +67,7 @@ const List = ({ boardId, listId }) => {
       {cards.map((card) => (
         <Card key={card._id} id={card._id} name={card.name} listId={listId} />
       ))}
-      <AddItem title="Add a card" boardId={boardId} listId={listId}/>
+      <AddItem title="Card" boardId={boardId} listId={listId}/>
     </div>
   );
 };

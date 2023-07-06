@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {addCard, addCardThunk} from '../homeScreen/HomeScreenSlice';
+import { addCard, addCardThunk, addList, addListThunk, addBoard, addBoardThunk } from '../homeScreen/HomeScreenSlice';
 import generateId from './generateId';
 import { useDispatch } from 'react-redux';
 
@@ -27,8 +27,23 @@ const AddItem = ({ title, boardId, listId, org }) => {
   const handleSubmitClick = () => {
     if (inputValue.trim() !== '') {
       const _id = generateId(5);
-      dispatch(addCard({ boardId, listId, _id, inputValue }));
-      dispatch(addCardThunk({name: inputValue, boardId, listId, tempId: _id}))
+      // depending on title prop dispatch appropriate action to add card, list, or board
+      switch (title) {
+        case 'Card':
+          dispatch(addCard({ boardId, listId, _id, inputValue }));
+          dispatch(addCardThunk({name: inputValue, boardId, listId, tempId: _id}));
+          break;
+        case 'List':
+          dispatch(addList({ boardId, _id, inputValue }));
+          dispatch(addListThunk({ name: inputValue, boardId, tempId: _id }));
+          break;
+        case 'Board':
+          dispatch(addBoard({ _id, inputValue, org }));
+          dispatch(addBoardThunk({ title: inputValue, tempId: _id, org }));
+          break;
+        default:
+          console.log('No card title is passed into client/features/list/List.js!');
+      }
       setAddingItem(false);
       setInputValue('');
     } else {
@@ -39,12 +54,12 @@ const AddItem = ({ title, boardId, listId, org }) => {
   return addingItem ? (
     <div>
       <input type="text" value={inputValue} onChange={handleInputChange} />
-      <button onClick={handleSubmitClick}>{title}</button>
+      <button onClick={handleSubmitClick}>{`Add a ${title}`}</button>
       <button onClick={handleCancelClick}>{'\u00D7'}</button>
       {errorMessage && <p>{errorMessage}</p>} 
     </div>
   ) : (
-    <button onClick={handleAddClick}>{title}</button>
+    <button onClick={handleAddClick}>{`Add a ${title}`}</button>
   );
 };
 

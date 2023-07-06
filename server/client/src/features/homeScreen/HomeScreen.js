@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import List from '../list/List';
+import AddItem from '../utilities/AddItem';
 
 // HomeScreen Component
 const HomeScreen = () => {
@@ -20,9 +21,11 @@ const Board = ({ board }) => {
   return (
     <div>
       <h1>{board.title}</h1>
-      {board.lists.map((list) => (
+      <div>{board.lists.map((list) => (
         <List key={list._id} boardId={board._id} listId={list._id} />
-      ))}
+        ))}
+      </div>
+      <AddItem title={'List'} boardId={ board._id }/>  
     </div>
   );
 };

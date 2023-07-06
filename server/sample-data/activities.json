@@ -1,0 +1,8 @@
+{
+  "activities": {
+    "user": "objectIdUser1",
+    "list": "objectIdList1",
+    "card": "objectIdCard1",
+    "text": "User moved card A to list B"
+  }
+}

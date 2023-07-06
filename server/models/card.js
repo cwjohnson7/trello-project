@@ -6,6 +6,7 @@ const CardSchema = new Schema({
   description: String,
   label: String,
   list: { type: Schema.Types.ObjectId, ref: "list" },
+  board: { type: Schema.Types.ObjectId, ref: "board" },
   comments: [{ type: Schema.Types.ObjectId, ref: "comment" }],
   activities: [{ type: Schema.Types.ObjectId, ref: "activity" }]
 })

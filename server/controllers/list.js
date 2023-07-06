@@ -2,27 +2,22 @@ const List = require("../models/list");
 const Board = require("../models/board");
 
 exports.addList = function (req, res, next) {
-  const id = req.body.boardId;
+  const { name, boardId, tempId } = req.body;
+  const id = boardId;
 
   Board.findById(id)
   .then((result) => {
-    console.log('board query: ', result)
-    
-    console.log('req.body: ', req.body);
     const list = new List({
-      name: req.body.listName,
+      name: name,
       board: result._id,
       org: result.org
     });
     list.save();
-    console.log('list saved: ', list);
     result.lists.push(list);
     result.save();
-    console.log('board query after adding list: ', result);
-    res.send(list);
+    res.status(200).send({ list, tempId });
   })
   .catch((err) => {
-    console.log(err);
     res.json(err)
   })
 }

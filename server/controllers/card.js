@@ -3,26 +3,23 @@ const List = require("../models/list");
 const Board = require("../models/board");
 
 exports.addCard = function (req, res, next) {
+  
+  const { name, description, tempId, listId, boardId } = req.body;
   const id = req.body.listId;
-
+  
   List.findById(id)
   .then((result) => {
-    console.log('list doc found: ', result)
-    
-    console.log('req.body: ', req.body);
     const card = new Card({
-      name: req.body.name,
-      description: req.body.description,
+      name: name,
+      description: description,
       label: 'none',
       list: result._id,
       board: result.board
     });
-   card.save();
-    console.log('card saved: ', card);
+    card.save();
     result.cards.push(card);
     result.save();
-    console.log('list doc after adding card: ', result);
-    res.send(card);
+    res.status(200).send({card, tempId, listId, boardId});
   })
   .catch((err) => {
     console.log(err);

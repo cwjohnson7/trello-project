@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
+import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/Col";
 
 import List from "./list";
 
@@ -8,30 +10,61 @@ const Board = () => {
 
   return (
     <BoardContainer>
-      <Container>
+      <BoardTitle>
         <h2>Board Name</h2>
-
-        <Row>
+      </BoardTitle>
+      
+      <div className="d-flex mt-5">
+        
         {/* Will map the lists array that belong to the board and return a List component for each list */}
         {/* {board.lists.map((listId, i) => {
           return <List listId={listId} key={listId} index={i} />;
         })} */}
+        
+        <List />
+        <List />
+        <List />
+        <List />
+        <List />
+        <List />
 
-          <List />
-
-          <List />
-        </Row>
-      </Container>
+        <AddList>
+          {"\uFF0B"} Add List
+        </AddList>
+      </div>
     </BoardContainer>    
   )
-
 };
 
 export default Board;
 
-const BoardContainer = styled.div`
-  padding-top: 160px;
-  height: 92%;
-  display: flex;
-  overflow-x: auto;
+const BoardTitle = styled.div`
+  position: fixed;
+  margin-left: 10px;
 `;
+
+const BoardContainer = styled.div`
+  padding-top: 150px;
+  height: 100%;
+  margin-left: 50px;
+`;
+
+const AddList = styled.div`
+  background: rgba(173,200,210, 0.5);
+  flex-shrink: 0;
+  width: 275px;
+  height: 50px;
+  margin: 10px;
+  margin-right: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  padding: 12px;
+  padding-left: 15px;
+  overflow-wrap: break-word;
+  &:hover {
+    background-color: rgba(173,200,210, 0.3);
+  }
+`;
+
+
+

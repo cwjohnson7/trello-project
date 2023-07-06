@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Button from "react-bootstrap/Button";
-import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap";
+import Row from "react-bootstrap";
+import Button from "react-bootstrap";
+import Col from "react-bootstrap";
 
 import List from "./list";
 

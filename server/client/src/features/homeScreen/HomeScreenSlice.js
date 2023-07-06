@@ -1,13 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-// import axios from "axios";
-const baseURl = process.env.TBD;
+import { createSelector } from "reselect";
+import createThunk from "../utilities/createThunk";
 
 const initialState = {
   user: {
     _id: "sf24d",
     firstName: "Yegor",
     lastName: "Rodin",
-    organization: "Parsity",
+    org: "Parsity",
   },
   boards: [
     {
@@ -48,6 +48,31 @@ const initialState = {
     },
   ],
 };
+
+// requests to add card in DB and replaces redux card's tempId with DB card._id
+export const addCardThunk = createThunk(
+  "homeScreen/addCardThunk",
+  "/api/addCard",
+  "POST"
+);
+
+export const moveCardThunk = createThunk(
+  "homeScreen/moveCardThunk",
+  "/api/moveCard",
+  "PUT"
+);
+
+export const addListThunk = createThunk(
+  "homeScreen/addListThunk",
+  "/api/addList",
+  "POST"
+);
+
+export const addBoardThunk = createThunk(
+  "homeScreen/addBoardThunk",
+  "/api/addBoard",
+  "POST"
+);
 
 export const homeScreenSlice = createSlice({
   name: "homeScreen",
@@ -90,6 +115,7 @@ export const homeScreenSlice = createSlice({
         // other card properties...
       });
     },
+
     addCard: (state, action) => {
       // find board
       const board = state.boards.find(
@@ -102,11 +128,160 @@ export const homeScreenSlice = createSlice({
         (list) => list._id === action.payload.listId
       );
       if (!list) return;
-      list.cards.push({ _id: action.payload._id, name: action.payload.inputValue });
+      list.cards.push({
+        _id: action.payload._id,
+        name: action.payload.inputValue,
+      });
+    },
+
+    addList: (state, action) => {
+      // find board
+      const board = state.boards.find(
+        (board) => board._id === action.payload.boardId
+      );
+      if (!board) return;
+      // add list to board
+      board.push({
+        _id: action.payload._id,
+        name: action.payload.inputValue,
+        cards: [],
+      });
+    },
+
+    addBoard: (state, action) => {
+      state.boards.push({
+        _id: action.payload._id,
+        org: action.payload.org,
+        title: action.payload.inputValue,
+      });
     },
   },
-  extraReducers: (builder) => {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(addCardThunk.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(addCardThunk.fulfilled, (state, action) => {
+        state.status = "fulfilled";
+        state.error = null;
+        // find board
+        const board = state.boards.find(
+          (board) => board._id === action.payload.boardId
+        );
+        if (!board) return;
+
+        // find list in the board
+        const list = board.lists.find(
+          (list) => list._id === action.payload.listId
+        );
+        if (!list) return;
+        // find card in the list by its temporary ID
+        const card = list.cards.find(
+          (card) => card._id === action.payload.tempId
+        );
+        if (!card) return;
+
+        // update card's _id with the new _id from the payload
+        card._id = action.payload.card._id;
+      })
+      .addCase(addCardThunk.rejected, (state, action) => {
+        state.status = "rejected";
+        state.error = action.payload;
+      })
+      .addCase(moveCardThunk.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(moveCardThunk.fulfilled, (state, action) => {
+        state.status = "fulfilled";
+        state.error = null;
+      })
+      .addCase(moveCardThunk.rejected, (state, action) => {
+        state.status = "rejected";
+        state.error = action.payload;
+      })
+      .addCase(addListThunk.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(addListThunk.fulfilled, (state, action) => {
+        state.status = "fulfilled";
+        state.error = null;
+        // update list._id from temp to DB id
+        // find board
+        const board = state.boards.find(
+          (board) => board._id === action.payload.boardId
+        );
+        if (!board) return;
+
+        // find list in the board by it temp id
+        const list = board.lists.find(
+          (list) => list._id === action.payload.tempId
+        );
+        if (!list) return;
+        // update temp list id for a DB list id
+        list._id = action.payload.list._id;
+      })
+      .addCase(addListThunk.rejected, (state, action) => {
+        state.status = "rejected";
+        state.error = action.payload;
+      })
+      .addCase(addBoardThunk.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(addBoardThunk.fulfilled, (state, action) => {
+        state.status = "fulfilled";
+        state.error = null;
+        // update board._id from temp to DB id
+        const board = state.boards.find(
+          (board) => board._id === action.payload.tempId
+        );
+        board._id = action.payload.board._id;
+      })
+      .addCase(addBoardThunk.rejected, (state, action) => {
+        state.status = "rejected";
+        state.error = action.payload;
+      });
+  },
 });
+//const { sourceListId, targetListId, cardId } = req.body;
 
 export const { moveCard, addCard } = homeScreenSlice.actions;
 export default homeScreenSlice.reducer;
+
+// following section is dedicated to memoised selector functions returned by "reselect" library
+
+// define input selectors for listDataSelector used inside List.js
+
+const getBoards = (state) => state.homeScreen.boards;
+// following two input selectors use props passed to List component from Board component
+const getBoardId = (_, boardId) => boardId;
+const getListId = (_, listId) => listId;
+
+export const listDataSelector = createSelector(
+  getBoards,
+  getBoardId,
+  getListId,
+  (boards, boardId, listId) => {
+    console.log(`boards below`);
+    console.log(boards);
+
+    console.log(`boardId below`);
+    console.log(boardId);
+
+    console.log(`listId below`);
+    console.log(listId);
+
+    const board = boards.find((board) => board._id === boardId);
+    // console.log('Found board:', board);
+    if (!board) return { cards: [], name: "" };
+
+    const list = board.lists.find((list) => list._id === listId);
+    // console.log('Found list:', list);
+    if (!list) return { cards: [], name: "" };
+
+    return { cards: list.cards, listName: list.name };
+  }
+);

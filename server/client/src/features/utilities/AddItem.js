@@ -40,7 +40,7 @@ const AddItem = ({ title, boardId, listId, org }) => {
   const handleAddStyle = () => {
     if (title === "Add Card") {
       return styleAddCard.addCard;
-    }
+    } 
   };
 
   const handleInputStyle = () => {

@@ -103,7 +103,7 @@ const List = ({ boardId, listId }) => {
       ))}
 
       {/* Just commenting AddItem out for now. Need to figure out how to incorporate styling and logic */}
-      <AddItem title="Add Card" boardId={boardId} listId={listId} />
+      <AddItem title="Card" boardId={boardId} listId={listId} />
 
       {/* <AddCard>
         {"\uFF0B"} Add Card

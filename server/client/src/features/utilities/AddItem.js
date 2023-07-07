@@ -3,6 +3,8 @@ import { addCard, addCardThunk, addList, addListThunk, addBoard, addBoardThunk }
 import generateId from './generateId';
 import { useDispatch } from 'react-redux';
 import styleAddCard from "../list/List.module.css";
+import styleAddList from "../board/Board.module.css";
+import styleAddBoard from "../homeScreen/HomeScreen.module.css";
 
 const AddItem = ({ title, boardId, listId, orgId }) => {
   const dispatch = useDispatch();
@@ -32,7 +34,7 @@ const AddItem = ({ title, boardId, listId, orgId }) => {
       switch (title) {
         case 'Card':
           dispatch(addCard({ boardId, listId, _id, inputValue }));
-          dispatch(addCardThunk({name: inputValue, boardId, listId, tempId: _id}));
+          dispatch(addCardThunk({name: inputValue, boardId, listId, tempId: _id})); 
           break;
         case 'List':
           dispatch(addList({ boardId, _id, inputValue }));
@@ -53,26 +55,40 @@ const AddItem = ({ title, boardId, listId, orgId }) => {
   };
 
   const handleAddStyle = () => {
-    if (title === "Add Card") {
-      return styleAddCard.addCard;
-    } 
+    switch (title) {
+      case "Card":
+        return styleAddCard.addCard;
+      case "List":
+        return styleAddList.addList;
+      case "Board":
+        return styleAddBoard.addBoard;
+      default:
+        return;
+    };
   };
 
   const handleInputStyle = () => {
-    if (title === "Add Card") {
-      return styleAddCard.addCardForm;
-    }
+    switch (title) {
+      case "Card":
+        return styleAddCard.addCardForm;
+      case "List":
+        return styleAddList.addListForm;
+      case "Board":
+        return styleAddBoard.addBoardForm;
+      default:
+        return;
+    };
   }
 
   return addingItem ? (
-    <div>
-      <input type="text" value={inputValue} onChange={handleInputChange} className={handleInputStyle()} placeholder="Add Card Title Here" autoFocus/>
-      <button onClick={handleSubmitClick} className="btn btn-primary m-2">{title}</button>
+    <div style={{width: "275px"}} >
+      <input type="text" value={inputValue} onChange={handleInputChange} className={handleInputStyle()} placeholder={`Add ${title} Title Here`} autoFocus/>
+      <button onClick={handleSubmitClick} className="btn btn-primary ms-3">Add {title}</button>
       <button onClick={handleCancelClick} className="btn btn-secondary m-2">{'\u00D7'}</button>
       {errorMessage && <p>{errorMessage}</p>} 
     </div>
   ) : (
-    <div onClick={handleAddClick} className={handleAddStyle()}>{"\uFF0B"} {title}</div>
+    <div onClick={handleAddClick} className={handleAddStyle()}>{"\uFF0B"} Add {title}</div>
   );
 };
 

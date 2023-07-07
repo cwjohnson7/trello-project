@@ -37,15 +37,27 @@ const AddItem = ({ title, boardId, listId, org }) => {
     }
   };
 
+  const handleAddStyle = () => {
+    if (title === "Add Card") {
+      return styleAddCard.addCard;
+    }
+  };
+
+  const handleInputStyle = () => {
+    if (title === "Add Card") {
+      return styleAddCard.addCardForm;
+    }
+  }
+
   return addingItem ? (
     <div>
-      <input type="text" value={inputValue} onChange={handleInputChange} className={styleAddCard.addCardForm} placeholder="Add Card Title Here" autoFocus/>
+      <input type="text" value={inputValue} onChange={handleInputChange} className={handleInputStyle()} placeholder="Add Card Title Here" autoFocus/>
       <button onClick={handleSubmitClick} className="btn btn-primary m-2">{title}</button>
       <button onClick={handleCancelClick} className="btn btn-secondary m-2">{'\u00D7'}</button>
       {errorMessage && <p>{errorMessage}</p>} 
     </div>
   ) : (
-    <div onClick={handleAddClick} className={styleAddCard.addCard}>{"\uFF0B"} {title}</div>
+    <div onClick={handleAddClick} className={handleAddStyle()}>{"\uFF0B"} {title}</div>
   );
 };
 

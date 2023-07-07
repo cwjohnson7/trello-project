@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import {addCard, addCardThunk} from '../homeScreen/HomeScreenSlice';
+import { addCard, addCardThunk, addList, addListThunk, addBoard, addBoardThunk } from '../homeScreen/HomeScreenSlice';
 import generateId from './generateId';
 import { useDispatch } from 'react-redux';
 import styleAddCard from "../list/List.module.css";
 
-const AddItem = ({ title, boardId, listId, org }) => {
+const AddItem = ({ title, boardId, listId, orgId }) => {
   const dispatch = useDispatch();
   const [addingItem, setAddingItem] = useState(false);
   const [inputValue, setInputValue] = useState('');
@@ -28,8 +28,23 @@ const AddItem = ({ title, boardId, listId, org }) => {
   const handleSubmitClick = () => {
     if (inputValue.trim() !== '') {
       const _id = generateId(5);
-      dispatch(addCard({ boardId, listId, _id, inputValue }));
-      dispatch(addCardThunk({name: inputValue, boardId, listId, tempId: _id}))
+      // depending on title prop dispatch appropriate action to add card, list, or board
+      switch (title) {
+        case 'Card':
+          dispatch(addCard({ boardId, listId, _id, inputValue }));
+          dispatch(addCardThunk({name: inputValue, boardId, listId, tempId: _id}));
+          break;
+        case 'List':
+          dispatch(addList({ boardId, _id, inputValue }));
+          dispatch(addListThunk({ name: inputValue, boardId, tempId: _id }));
+          break;
+        case 'Board':
+          dispatch(addBoard({ _id, inputValue, orgId }));
+          dispatch(addBoardThunk({ title: inputValue, tempId: _id, orgId }));
+          break;
+        default:
+          console.log('No card title is passed into client/features/list/List.js!');
+      }
       setAddingItem(false);
       setInputValue('');
     } else {
@@ -75,5 +90,5 @@ export default AddItem;
 // async: dispatch(addListThunk({ name: inputValue, boardId, tempId: _id }))
 
 // ADD BOARD:
-// sync: dispatch(addBoard({ _id, inputValue, org }))
-// async: dispatch(addBoardThunk({ title: inputValue, tempId: _id, org }))
+// sync: dispatch(addBoard({ _id, inputValue, orgId }))
+// async: dispatch(addBoardThunk({ title: inputValue, tempId: _id, orgId }))

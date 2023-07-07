@@ -11,8 +11,6 @@ import { moveCard, listDataSelector, moveCardThunk } from "../homeScreen/HomeScr
 
 
 const List = ({ boardId, listId }) => {
-  // console.log(`boardId: ${boardId} listId: ${listId}`);
-  // console.log(`board id: ${boardId} and list id: ${listId}`);
   const dispatch = useDispatch();
   // return cards and name belonging to current list
   const { cards, listName } = useSelector((state) => {

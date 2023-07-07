@@ -4,8 +4,28 @@
   max-width: 45%;
   border: solid 5px hsl(0, 69%, 35%);
 }
+
 .sourceColumn {
   min-height: 100px;
   border: solid 2px hsl(0, 7%, 15%);
   max-width: 45%;
+}
+
+.addCard {
+  cursor: pointer;
+  margin: 5px;
+  padding: 3px;
+  border-radius: 10px;
+}
+
+.addCard:hover {
+  background-color: rgb(222, 237, 237);
+}
+
+.addCardForm {
+  width: 263px;
+  height: 60px;
+  margin: 5px;
+  border-radius: 5px;
+  border: 0;
 }

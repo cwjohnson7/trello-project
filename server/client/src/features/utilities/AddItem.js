@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { addCard, addCardThunk, addList, addListThunk, addBoard, addBoardThunk } from '../homeScreen/HomeScreenSlice';
 import generateId from './generateId';
 import { useDispatch } from 'react-redux';
+import styleAddCard from "../list/List.module.css";
+
 const AddItem = ({ title, boardId, listId, orgId }) => {
   const dispatch = useDispatch();
   const [addingItem, setAddingItem] = useState(false);
@@ -50,15 +52,27 @@ const AddItem = ({ title, boardId, listId, orgId }) => {
     }
   };
 
+  const handleAddStyle = () => {
+    if (title === "Add Card") {
+      return styleAddCard.addCard;
+    } 
+  };
+
+  const handleInputStyle = () => {
+    if (title === "Add Card") {
+      return styleAddCard.addCardForm;
+    }
+  }
+
   return addingItem ? (
     <div>
-      <input type="text" value={inputValue} onChange={handleInputChange} />
-      <button onClick={handleSubmitClick}>{`Add a ${title}`}</button>
-      <button onClick={handleCancelClick}>{'\u00D7'}</button>
+      <input type="text" value={inputValue} onChange={handleInputChange} className={handleInputStyle()} placeholder="Add Card Title Here" autoFocus/>
+      <button onClick={handleSubmitClick} className="btn btn-primary m-2">{title}</button>
+      <button onClick={handleCancelClick} className="btn btn-secondary m-2">{'\u00D7'}</button>
       {errorMessage && <p>{errorMessage}</p>} 
     </div>
   ) : (
-    <button onClick={handleAddClick}>{`Add a ${title}`}</button>
+    <div onClick={handleAddClick} className={handleAddStyle()}>{"\uFF0B"} {title}</div>
   );
 };
 

@@ -2,53 +2,45 @@ const Organization = require("../models/organization");
 const User = require("../models/user");
 
 exports.addOrg = function (req, res) {
-  const org = req.body.orgName;
   console.log(req.body);
   const newOrg = new Organization({
-    name: req.body.orgName
+    name: req.body.orgName,
   });
   newOrg.save();
-//response isn't including  the name entered in the new org above
   res.send(newOrg);
-}
-
-// exports.signIn = function ( req, res ) {
-
-// }
+};
 
 exports.signUp = function (req, res, next) {
-
   const email = req.body.email;
   const org = req.body.orgName;
   console.log(req.body);
 
-  User.findOne({ email: email })
-  .then((err, result) => {
-    if(err) { return next(err)}
+  User.findOne({ email: email }).then((err, result) => {
+    if (err) {
+      return next(err);
+    }
 
     // If a user with email does exist, return an error
     if (result) {
-      return res.status(422).send({ error: 'Email is in use' });
+      return res.status(422).send({ error: "Email is in use" });
     }
-    
+
     Organization.findOne({ name: org }).then((existingOrg) => {
-      if (!existingOrg) { 
-        let newOrg = new Organization({ name: org })
+      if (!existingOrg) {
+        let newOrg = new Organization({ name: org });
         newOrg.save();
-        console.log('NewOrg: ', newOrg);
+        console.log("NewOrg: ", newOrg);
       }
       const user = new User({
         email: req.body.email,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
-        org: existingOrg._id
-      })
-    
+        org: existingOrg._id,
+      });
+
       user.save();
-    
-      res.send(user)
-    })
-  })
-  
-  
-}
+
+      res.send({user, boards});
+    });
+  });
+};

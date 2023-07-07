@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { addCard, addCardThunk, addList, addListThunk, addBoard, addBoardThunk } from '../homeScreen/HomeScreenSlice';
 import generateId from './generateId';
 import { useDispatch } from 'react-redux';
-
-const AddItem = ({ title, boardId, listId, org }) => {
+const AddItem = ({ title, boardId, listId, orgId }) => {
   const dispatch = useDispatch();
   const [addingItem, setAddingItem] = useState(false);
   const [inputValue, setInputValue] = useState('');
@@ -38,8 +37,8 @@ const AddItem = ({ title, boardId, listId, org }) => {
           dispatch(addListThunk({ name: inputValue, boardId, tempId: _id }));
           break;
         case 'Board':
-          dispatch(addBoard({ _id, inputValue, org }));
-          dispatch(addBoardThunk({ title: inputValue, tempId: _id, org }));
+          dispatch(addBoard({ _id, inputValue, orgId }));
+          dispatch(addBoardThunk({ title: inputValue, tempId: _id, orgId }));
           break;
         default:
           console.log('No card title is passed into client/features/list/List.js!');
@@ -77,5 +76,5 @@ export default AddItem;
 // async: dispatch(addListThunk({ name: inputValue, boardId, tempId: _id }))
 
 // ADD BOARD:
-// sync: dispatch(addBoard({ _id, inputValue, org }))
-// async: dispatch(addBoardThunk({ title: inputValue, tempId: _id, org }))
+// sync: dispatch(addBoard({ _id, inputValue, orgId }))
+// async: dispatch(addBoardThunk({ title: inputValue, tempId: _id, orgId }))

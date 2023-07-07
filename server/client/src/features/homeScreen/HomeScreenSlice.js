@@ -7,7 +7,8 @@ const initialState = {
     _id: "sf24d",
     firstName: "Yegor",
     lastName: "Rodin",
-    org: "Parsity",
+    orgId: '64a720b83b8a0cd93ea4f327',
+    orgName: "Parsity"
   },
   boards: [
     {

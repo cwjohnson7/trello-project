@@ -5,8 +5,8 @@ const Card = require("./controllers/card");
 
 module.exports = function(app) {
   //for existing users to login. can add another post route for /auth/signup if needed.
-  app.post('/auth/addOrg', Authentication.addOrg)
-  app.post('/auth/signup', Authentication.signUp)
+  app.post('/api/addOrg', Authentication.addOrg)
+  app.post('/api/signup', Authentication.signUp)
   // app.post('/auth/signin', Authentication.signIn)
   
 

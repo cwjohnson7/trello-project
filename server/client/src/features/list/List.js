@@ -7,15 +7,20 @@ import AddItem from "../utilities/AddItem";
 import { useDrop } from "react-dnd";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { moveCard, listDataSelector, moveCardThunk } from "../homeScreen/HomeScreenSlice";
-
+import {
+  moveCard,
+  listDataSelector,
+  moveCardThunk,
+} from "../homeScreen/HomeScreenSlice";
 
 const List = ({ boardId, listId }) => {
   const dispatch = useDispatch();
   // return cards and name belonging to current list
   const { cards, listName } = useSelector((state) => {
     // find board with the id matching board id prop that is passed to the List via "listId" prop from HomeScreen component
-    const board = state.homeScreen.boards.find((board) => board._id === boardId);
+    const board = state.homeScreen.boards.find(
+      (board) => board._id === boardId
+    );
     if (!board) return { cards: [], name: "" };
 
     const list = board.lists.find((list) => list._id === listId);
@@ -46,16 +51,18 @@ const List = ({ boardId, listId }) => {
           cardName: item.name,
         })
       );
-      dispatch(moveCardThunk({
-        sourceListId: item.listId,
-        targetListId: listId,
-        cardId: item.id,
-      }))
+      dispatch(
+        moveCardThunk({
+          sourceListId: item.listId,
+          targetListId: listId,
+          cardId: item.id,
+        })
+      );
       return { listId: listId }; // Return drop result
     },
   }));
 
-  // Render and Edit List Title 
+  // Render and Edit List Title
   const [listTitle, setListTitle] = useState("List Title");
   const [isEditing, setIsEditing] = useState(false);
 
@@ -78,15 +85,18 @@ const List = ({ boardId, listId }) => {
   const renderListTitle = () => {
     return isEditing ? (
       <EditTitle>
-        <input value={listName} onChange={e => setListTitle(e.currentTarget.value)} onKeyUp={handleTitleChange} onFocus={handleFocus} autoFocus/>
+        <input
+          value={listName}
+          onChange={(e) => setListTitle(e.currentTarget.value)}
+          onKeyUp={handleTitleChange}
+          onFocus={handleFocus}
+          autoFocus
+        />
       </EditTitle>
     ) : (
-      <ListTitle onClick={handleInitialTitleClick}>
-        {listName}
-      </ListTitle>
+      <ListTitle onClick={handleInitialTitleClick}>{listName}</ListTitle>
     );
   };
-
 
   return (
     <ListContainer
@@ -94,13 +104,20 @@ const List = ({ boardId, listId }) => {
       ref={drop}
       style={{ backgroundColor: isOver ? "blue" : "#ADC8D2" }}
     >
-      
       {renderListTitle()}
       {/* <ListTitle>{listName}</ListTitle> */}
       {/* {canDrop ? "Release to drop" : "Drag a box here"} */}
-      {cards.map((card) => (
-        <Card key={card._id} id={card._id} name={card.name} listId={listId} />
-      ))}
+      {[...cards]
+        .sort((a, b) => a.index - b.index)
+        .map((card) => (
+          <Card
+            key={card._id}
+            id={card._id}
+            name={card.name}
+            listId={listId}
+            index={card.index}
+          />
+        ))}
 
       {/* Just commenting AddItem out for now. Need to figure out how to incorporate styling and logic */}
       <AddItem title="Add Card" boardId={boardId} listId={listId} />
@@ -108,8 +125,6 @@ const List = ({ boardId, listId }) => {
       {/* <AddCard>
         {"\uFF0B"} Add Card
       </AddCard> */}
-
-
     </ListContainer>
   );
 };
@@ -117,7 +132,7 @@ const List = ({ boardId, listId }) => {
 export default List;
 
 const ListContainer = styled.div`
-  background: #ADC8D2;
+  background: #adc8d2;
   width: 275px;
   height: fit-content;
   margin: 10px;

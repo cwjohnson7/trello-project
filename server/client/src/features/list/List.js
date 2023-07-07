@@ -1,4 +1,4 @@
-import React, { useMemo} from "react";
+import React, { useMemo, useState } from "react";
 import styled from "styled-components";
 import Card from "../card/Card";
 import styles from "./List.module.css";
@@ -57,24 +57,59 @@ const List = ({ boardId, listId }) => {
     },
   }));
 
+  // Render and Edit List Title 
+  const [listTitle, setListTitle] = useState("List Title");
+  const [isEditing, setIsEditing] = useState(false);
+
+  const handleTitleChange = (e) => {
+    e.preventDefault();
+
+    if (e.key === "Enter") {
+      setIsEditing(false);
+    }
+  };
+
+  const handleInitialTitleClick = () => {
+    setIsEditing(true);
+  };
+
+  const handleFocus = (e) => {
+    e.currentTarget.select();
+  };
+
+  const renderListTitle = () => {
+    return isEditing ? (
+      <EditTitle>
+        <input value={listName} onChange={e => setListTitle(e.currentTarget.value)} onKeyUp={handleTitleChange} onFocus={handleFocus} autoFocus/>
+      </EditTitle>
+    ) : (
+      <ListTitle onClick={handleInitialTitleClick}>
+        {listName}
+      </ListTitle>
+    );
+  };
+
+
   return (
     <ListContainer
       // className={styles.sourceColumn}
       ref={drop}
       style={{ backgroundColor: isOver ? "blue" : "#ADC8D2" }}
     >
-      <ListTitle>{listName}</ListTitle>
+      
+      {renderListTitle()}
+      {/* <ListTitle>{listName}</ListTitle> */}
       {/* {canDrop ? "Release to drop" : "Drag a box here"} */}
       {cards.map((card) => (
         <Card key={card._id} id={card._id} name={card.name} listId={listId} />
       ))}
 
       {/* Just commenting AddItem out for now. Need to figure out how to incorporate styling and logic */}
-      {/* <AddItem title="Add a card" boardId={boardId} listId={listId} className={styles.addCard}/> */}
+      <AddItem title="Add Card" boardId={boardId} listId={listId} />
 
-      <AddCard>
+      {/* <AddCard>
         {"\uFF0B"} Add Card
-      </AddCard>
+      </AddCard> */}
 
 
     </ListContainer>
@@ -99,12 +134,16 @@ const ListTitle = styled.div`
   overflow-wrap: break-word;
 `;
 
-const AddCard = styled.div`
-  cursor: pointer;
-  margin: 5px;
-  padding: 3px;
-  border-radius: 10px;
-  &:hover {
-    background-color: rgb(222, 237, 237);
-  }
+const EditTitle = styled.div`
+  padding: 8px;
 `;
+
+// const AddCard = styled.div`
+//   cursor: pointer;
+//   margin: 5px;
+//   padding: 3px;
+//   border-radius: 10px;
+//   &:hover {
+//     background-color: rgb(222, 237, 237);
+//   }
+// `;

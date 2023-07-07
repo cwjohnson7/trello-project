@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {addCard, addCardThunk} from '../homeScreen/HomeScreenSlice';
 import generateId from './generateId';
 import { useDispatch } from 'react-redux';
+import styleAddCard from "../list/List.module.css";
 
 const AddItem = ({ title, boardId, listId, org }) => {
   const dispatch = useDispatch();
@@ -38,13 +39,13 @@ const AddItem = ({ title, boardId, listId, org }) => {
 
   return addingItem ? (
     <div>
-      <input type="text" value={inputValue} onChange={handleInputChange} />
-      <button onClick={handleSubmitClick}>{title}</button>
-      <button onClick={handleCancelClick}>{'\u00D7'}</button>
+      <input type="text" value={inputValue} onChange={handleInputChange} className={styleAddCard.addCardForm} placeholder="Add Card Title Here" autoFocus/>
+      <button onClick={handleSubmitClick} className="btn btn-primary m-2">{title}</button>
+      <button onClick={handleCancelClick} className="btn btn-secondary m-2">{'\u00D7'}</button>
       {errorMessage && <p>{errorMessage}</p>} 
     </div>
   ) : (
-    <button onClick={handleAddClick}>{title}</button>
+    <div onClick={handleAddClick} className={styleAddCard.addCard}>{"\uFF0B"} {title}</div>
   );
 };
 

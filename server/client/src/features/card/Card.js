@@ -7,15 +7,12 @@ import { startDrag, stopDrag } from "../homeScreen/DragDropSlice";
 import { useDispatch } from "react-redux";
 import { Button } from "react-bootstrap";
 import { Modal } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import { useState } from "react";
 
 
-
 const Card = ({ id, name, listId }) => {
-  // create local state and functions for displaying modals for each card
-  const [showModal, setShowModal] = useState(false);
-  const handleShowModal = () => setShowModal(true);
-  const handleCloseModal = () => setShowModal(false);
+  
 
 
   const dispatch = useDispatch();
@@ -44,17 +41,46 @@ const Card = ({ id, name, listId }) => {
     // // start drag operation:
     // if(isDragging) dispatch(startDrag(item));
 
+  // function to handle editing of description textarea in card modal
+  const [isEditing, setIsEditing] = useState(false);
+  const renderCardDescription = () => {
+    return isEditing ? (
+      <Form>
+        <Form.Group className="mb-3">
+          <Form.Control as="textarea" rows={3} />
+          <Button variant="primary">Save Changes</Button>
+          <Button variant="secondary" className="ms-1">Close</Button>
+        </Form.Group>
+      </Form>
+    ) : (
+      <div>Description Text goes here</div>
+    )
+  }
+
+// create local state and functions for displaying modals for each card
+  const [showModal, setShowModal] = useState(false);
+  const handleShowModal = () => setShowModal(true);
+  const handleCloseModal = () => setShowModal(false);
+
+  
   return (
     <div>
       <CardContainer ref={drag} key={id} style ={{
         opacity: isDragging? 0.5 : 1
       }} onClick={handleShowModal}>{name}</CardContainer>
 
+
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Card Title Here!</Modal.Title>
+          <Modal.Title>{name}</Modal.Title>
         </Modal.Header>
+        <div className="ps-3">in list "ListName"</div>
         <Modal.Body>
+          <Modal.Title>Description</Modal.Title>
+          {renderCardDescription()}
+        </Modal.Body>
+        <Modal.Body>
+          <Modal.Title>Activity</Modal.Title>
           <ul>
             <li>Card Description</li>
             <li>Comments</li>

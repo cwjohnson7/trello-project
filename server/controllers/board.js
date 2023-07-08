@@ -18,3 +18,29 @@ exports.addBoard = async function (req, res, next) {
     res.json(err);
   }
 }
+
+exports.getUserBoards = async function(req, res, next) {
+  const { orgId } = req.body;
+
+  // const result = await Organization.findById(orgId)
+  // .populate({
+  //   path: 'boards',
+  //   populate: {path: 'lists'},
+  //   populate: {path: 'cards'} })
+
+  const boards = await Board.find({org: orgId})
+  .populate({
+    path: 'lists',
+    model: 'list',
+    populate: {
+      path: 'cards',
+      model:'card',
+      populate: {
+        path: 'comments',
+        model: 'comment'
+      }
+    }
+  })
+  res.send({ boards })
+
+}

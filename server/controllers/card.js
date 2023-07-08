@@ -4,7 +4,7 @@ const Board = require("../models/board");
 
 exports.addCard = function (req, res, next) {
   
-  const { name, description, tempId, listId, boardId } = req.body;
+  const { name, description, tempId, listId, boardId, index } = req.body;
   const id = req.body.listId;
   
   List.findById(id)
@@ -12,6 +12,7 @@ exports.addCard = function (req, res, next) {
     const card = new Card({
       name: name,
       description: description,
+      index: index,
       label: 'none',
       list: result._id,
       board: result.board

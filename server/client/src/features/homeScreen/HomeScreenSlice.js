@@ -22,7 +22,7 @@ const initialState = {
             { _id: "sdfff",
               name: "Work Out",
               description: "I am going to go to the gym",
-              label: "", 
+              label: "green", 
               comments: [
                 {
                   _id: "aqwed",

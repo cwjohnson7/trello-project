@@ -5,9 +5,7 @@ import ItemTypes from "../utilities/ItemTypes";
 import styles from "./Card.module.css"; 
 import { startDrag, stopDrag } from "../homeScreen/DragDropSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { Button } from "react-bootstrap";
-import { Modal } from "react-bootstrap";
-import { Form } from "react-bootstrap";
+import { Button, Modal, Form, Container, Row, Col } from "react-bootstrap";
 import { useState } from "react";
 import CardModal from "../CardModal";
 import AddItem from "../utilities/AddItem";
@@ -17,6 +15,11 @@ import Comment from "../comment/Comment";
 
 
 const Card = ({ id, name, listId, boardId }) => {
+  const boards = useSelector((state) => state.homeScreen.boards);
+  const board = boards.find(board => board._id === boardId);
+  const list = board.lists.find(list => list._id === listId);
+  const card = list.cards.find(card => card._id === id);
+
   const dispatch = useDispatch();
   const item = { id, name, listId };
   // connect Card to monitors state of React Drag and Drop via useDrag hook
@@ -66,7 +69,7 @@ const Card = ({ id, name, listId, boardId }) => {
         </Form.Group>
       </Form>
     ) : (
-      <div onClick={handleDescriptionClick}>card description</div>
+      <div onClick={handleDescriptionClick}>{card.description}</div>
     )
   };
 
@@ -85,26 +88,55 @@ const Card = ({ id, name, listId, boardId }) => {
     
 
       {/* I'm hoping I can figure out a way to have the modal in its own separate feature file/folder */}
-      <Modal show={showModal} onHide={handleCloseModal}>
+      <Modal size="lg" show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
           <Modal.Title>{name}</Modal.Title>
-          <Modal.Title>Label</Modal.Title>
+          <div className={styles.cardLabel}style={{ backgroundColor: card.label }}></div>
         </Modal.Header>
-        <div className="ps-3">in list "ListName"</div>
+        <div className="ps-3">in list <span className={styles.list}>{list.name}</span></div>
         <Modal.Body>
-          <Modal.Title>Description</Modal.Title>
-          {renderCardDescription()}
-        </Modal.Body>
-        
-        <Modal.Body>
-          <Modal.Title>Activity</Modal.Title>
+        <Container>
+          <Row>
+            <Col md={8}>
+              <Modal.Body>
+                <Modal.Title>Description</Modal.Title>
+                {renderCardDescription()} 
+              </Modal.Body>
+           
+              <Modal.Body>
+                <Modal.Title>Activity</Modal.Title>
       
-          {/* Will need to figure out what properties to pass here */}
-          <AddItem title="Comment" cardId={id} listId={listId} boardId={boardId} />
+                {/* Will need to figure out what properties to pass here */}
+                <AddItem title="Comment" cardId={id} listId={listId} boardId={boardId} />
          
-          <Comment cardId={id} listId={listId} boardId={boardId} /> 
+                <Comment cardId={id} listId={listId} boardId={boardId} />  
+              </Modal.Body>
+
+            </Col>
+            {/* Styling for label, move card, and archive buttons is added. Still need to add code to make these changes to state */}
+            <Col md={4}>
+              <Modal.Title>Label</Modal.Title>
+              <Form.Select className={styles.selectBtn}>
+                <option>Label</option>
+                <option>None</option>
+                <option>Purple</option>
+                <option>Blue</option>
+                <option>Green</option>
+                <option>Yellow</option>
+                <option>Orange</option>
+                <option>Red</option>
+              </Form.Select>
+              <hr />
+              <Modal.Title>Actions</Modal.Title>
+              <div className={styles.actionButton}>Move</div>
+              <div className={styles.actionButton}>Archive</div>
+              <hr />
+            </Col>
+          </Row>
+        </Container>
+</Modal.Body>
+
           
-        </Modal.Body>
         <Modal.Footer>
           <Button variant="primary" onClick={handleCloseModal}>Save Changes</Button>
           <Button variant="secondary" onClick={handleCloseModal}>Close</Button>

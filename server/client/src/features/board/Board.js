@@ -15,6 +15,19 @@ const Board = () => {
 
   const handleBoardButtonClick = () => {
     navigate("/boards")
+  };
+
+  // I set this code up because when a new board is created there is no List array. A list array needs to be added at somepoint. Either when the board is made or when the first list is made. 
+  const renderLists = () => {
+     
+    if (board.lists) {
+     
+      return board.lists.map((list) => (
+        <List key={list._id} boardId={board._id} listId={list._id} />
+      ))
+    } else {
+      return;
+    }
   }
 
   return (
@@ -25,10 +38,9 @@ const Board = () => {
       </BoardTitle>
       
       <div className="d-flex mt-4">  
-        {board.lists.map((list) => (
-          <List key={list._id} boardId={board._id} listId={list._id} />
-        ))}
-  
+
+        {renderLists()}
+        
         <AddItem title="List" boardId={board._id} />
 
       </div>

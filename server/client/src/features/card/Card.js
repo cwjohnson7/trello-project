@@ -4,17 +4,19 @@ import { useDrag } from "react-dnd";
 import ItemTypes from "../utilities/ItemTypes";
 import styles from "./Card.module.css"; 
 import { startDrag, stopDrag } from "../homeScreen/DragDropSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Button } from "react-bootstrap";
 import { Modal } from "react-bootstrap";
 import { Form } from "react-bootstrap";
 import { useState } from "react";
+import CardModal from "../CardModal";
+import AddItem from "../utilities/AddItem";
+import { useLocation, matchPath } from "react-router-dom";
+import Comment from "../comment/Comment";
 
 
-const Card = ({ id, name, listId }) => {
-  
 
-
+const Card = ({ id, name, listId, boardId }) => {
   const dispatch = useDispatch();
   const item = { id, name, listId };
   // connect Card to monitors state of React Drag and Drop via useDrag hook
@@ -41,56 +43,71 @@ const Card = ({ id, name, listId }) => {
     // // start drag operation:
     // if(isDragging) dispatch(startDrag(item));
 
-  // function to handle editing of description textarea in card modal
-  const [isEditing, setIsEditing] = useState(false);
+
+  // Code to handle editing of description textarea in card modal
+  const [descriptionEditing, setDescriptionEditing] = useState(false);
+  const handleDescriptionClick = () => setDescriptionEditing(true);
+  const handleDecriptionClose = () => setDescriptionEditing(false);
+
+  // function for adding description to state
+  const handleDescriptionSaveClick = () => {
+    // code to add to state
+
+    setDescriptionEditing(false);
+  };
+
   const renderCardDescription = () => {
-    return isEditing ? (
+    return descriptionEditing ? (
       <Form>
         <Form.Group className="mb-3">
-          <Form.Control as="textarea" rows={3} />
-          <Button variant="primary">Save Changes</Button>
-          <Button variant="secondary" className="ms-1">Close</Button>
+          <Form.Control as="textarea" rows={3} placeholder="Add description here" />
+          <Button variant="primary" onClick={handleDescriptionSaveClick}>Save Changes</Button>
+          <Button variant="secondary" className="ms-1" onClick={handleDecriptionClose}>Close</Button>
         </Form.Group>
       </Form>
     ) : (
-      <div>Description Text goes here</div>
+      <div onClick={handleDescriptionClick}>card description</div>
     )
-  }
+  };
 
 // create local state and functions for displaying modals for each card
   const [showModal, setShowModal] = useState(false);
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
-
   
+
   return (
     <div>
       <CardContainer ref={drag} key={id} style ={{
         opacity: isDragging? 0.5 : 1
       }} onClick={handleShowModal}>{name}</CardContainer>
 
+    
 
+      {/* I'm hoping I can figure out a way to have the modal in its own separate feature file/folder */}
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
           <Modal.Title>{name}</Modal.Title>
+          <Modal.Title>Label</Modal.Title>
         </Modal.Header>
         <div className="ps-3">in list "ListName"</div>
         <Modal.Body>
           <Modal.Title>Description</Modal.Title>
           {renderCardDescription()}
         </Modal.Body>
+        
         <Modal.Body>
           <Modal.Title>Activity</Modal.Title>
-          <ul>
-            <li>Card Description</li>
-            <li>Comments</li>
-            <li>Activities</li>
-            <li>Labeling capabilities</li>
-          </ul>
+      
+          {/* Will need to figure out what properties to pass here */}
+          <AddItem title="Comment" cardId={id} listId={listId} boardId={boardId} />
+         
+          <Comment cardId={id} listId={listId} boardId={boardId} /> 
+          
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
           <Button variant="primary" onClick={handleCloseModal}>Save Changes</Button>
+          <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
         </Modal.Footer>
       </Modal>
 

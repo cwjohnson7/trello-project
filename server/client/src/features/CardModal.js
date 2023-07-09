@@ -1,11 +1,17 @@
 import { useState } from "react";
 import { Modal, Button } from "react-bootstrap";
-  
-const CardModal = (props) => {
+import AddItem from "./utilities/AddItem";
+import Comment from "./comment/Comment";  
+
+
+const CardModal = ({ cardId, listId, setShow }) => {
   // create local state and functions for displaying modals for each card
   const [showModal, setShowModal] = useState(false);
+  
   const handleShowModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
+console.log(setShow, "modal")
+console.log(showModal, "showModal");
 
   return (
     <Modal show={showModal} onHide={handleCloseModal}>
@@ -17,18 +23,18 @@ const CardModal = (props) => {
           <Modal.Title>Description</Modal.Title>
           {/* {renderCardDescription()} */}
         </Modal.Body>
+
         <Modal.Body>
           <Modal.Title>Activity</Modal.Title>
-          <ul>
-            <li>Card Description</li>
-            <li>Comments</li>
-            <li>Activities</li>
-            <li>Labeling capabilities</li>
-          </ul>
+          <AddItem title="Comment" />
+         
+          <Comment cardId={cardId} listId={listId} /> 
+          
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
           <Button variant="primary" onClick={handleCloseModal}>Save Changes</Button>
+          <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
+          
         </Modal.Footer>
       </Modal>
   )

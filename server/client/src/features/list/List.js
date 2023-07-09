@@ -8,6 +8,7 @@ import { useDrop } from "react-dnd";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { moveCard, listDataSelector, moveCardThunk } from "../homeScreen/HomeScreenSlice";
+import { Row } from "react-bootstrap";
 
 
 const List = ({ boardId, listId }) => {
@@ -56,7 +57,7 @@ const List = ({ boardId, listId }) => {
   }));
 
   // Render and Edit List Title 
-  const [listTitle, setListTitle] = useState("List Title");
+  // Still need to add code to change the value in state and database
   const [isEditing, setIsEditing] = useState(false);
 
   const handleTitleChange = (e) => {
@@ -78,12 +79,18 @@ const List = ({ boardId, listId }) => {
   const renderListTitle = () => {
     return isEditing ? (
       <EditTitle>
-        <input value={listName} onChange={e => setListTitle(e.currentTarget.value)} onKeyUp={handleTitleChange} onFocus={handleFocus} autoFocus/>
+        <input value={listName} onKeyUp={handleTitleChange} onFocus={handleFocus} autoFocus/>
       </EditTitle>
     ) : (
-      <ListTitle onClick={handleInitialTitleClick}>
-        {listName}
-      </ListTitle>
+      <div className="container">
+        <div className="row pt-2 pb-2">
+          <ListTitle onClick={handleInitialTitleClick}  className="col-md-8">
+            {listName}
+          </ListTitle>
+          <div className="col-md-4">Cards: {cards.length} </div>
+        </div>
+      </div>
+      
     );
   };
 
@@ -99,16 +106,11 @@ const List = ({ boardId, listId }) => {
       {/* <ListTitle>{listName}</ListTitle> */}
       {/* {canDrop ? "Release to drop" : "Drag a box here"} */}
       {cards.map((card) => (
-        <Card key={card._id} id={card._id} name={card.name} listId={listId} />
+        <Card key={card._id} id={card._id} name={card.name} listId={listId} boardId={boardId}/>
       ))}
 
       {/* Just commenting AddItem out for now. Need to figure out how to incorporate styling and logic */}
       <AddItem title="Card" boardId={boardId} listId={listId} />
-
-      {/* <AddCard>
-        {"\uFF0B"} Add Card
-      </AddCard> */}
-
 
     </ListContainer>
   );
@@ -128,7 +130,7 @@ const ListContainer = styled.div`
 
 const ListTitle = styled.div`
   cursor: pointer;
-  padding: 10px;
+  font-weight: 500;
   overflow-wrap: break-word;
 `;
 

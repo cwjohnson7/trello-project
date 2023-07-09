@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { addCard, addCardThunk, addList, addListThunk, addBoard, addBoardThunk } from '../homeScreen/HomeScreenSlice';
+import { addCard, addCardThunk, addList, addListThunk, addBoard, addBoardThunk, addComment, addCommentThunk } from '../homeScreen/HomeScreenSlice';
 import generateId from './generateId';
 import { useDispatch } from 'react-redux';
 import styleAddCard from "../list/List.module.css";
 import styleAddList from "../board/Board.module.css";
 import styleAddBoard from "../homeScreen/HomeScreen.module.css";
+import styleAddComment from "../card/Card.module.css";
 
-const AddItem = ({ title, boardId, listId, orgId }) => {
+const AddItem = ({ title, boardId, listId, orgId, cardId }) => {
   const dispatch = useDispatch();
   const [addingItem, setAddingItem] = useState(false);
   const [inputValue, setInputValue] = useState('');
@@ -44,6 +45,10 @@ const AddItem = ({ title, boardId, listId, orgId }) => {
           dispatch(addBoard({ _id, inputValue, orgId }));
           dispatch(addBoardThunk({ title: inputValue, tempId: _id, orgId }));
           break;
+        case 'Comment':
+          dispatch(addComment({ _id, boardId, listId, cardId, inputValue }));
+          dispatch(addCommentThunk({ text: inputValue, tempId: _id, cardId, listId, boardId }));
+          break;
         default:
           console.log('No card title is passed into client/features/list/List.js!');
       }
@@ -53,7 +58,8 @@ const AddItem = ({ title, boardId, listId, orgId }) => {
       setErrorMessage(`${title} cannot be empty!`); 
     }
   };
-
+  
+  // Handling the style of the add button dependent on Card, List, or Board
   const handleAddStyle = () => {
     switch (title) {
       case "Card":
@@ -62,11 +68,14 @@ const AddItem = ({ title, boardId, listId, orgId }) => {
         return styleAddList.addList;
       case "Board":
         return styleAddBoard.addBoard;
+      case "Comment":
+        return styleAddComment.addComment;
       default:
         return;
     };
   };
-
+  
+  // Handling the style of the input form dependent on Card, List, or Board
   const handleInputStyle = () => {
     switch (title) {
       case "Card":
@@ -75,13 +84,15 @@ const AddItem = ({ title, boardId, listId, orgId }) => {
         return styleAddList.addListForm;
       case "Board":
         return styleAddBoard.addBoardForm;
+      case "Comment":
+        return styleAddComment.addCommentForm;
       default:
         return;
     };
   }
 
   return addingItem ? (
-    <div style={{width: "275px"}} >
+    <div >
       <input type="text" value={inputValue} onChange={handleInputChange} className={handleInputStyle()} placeholder={`Add ${title} Title Here`} autoFocus/>
       <button onClick={handleSubmitClick} className="btn btn-primary ms-3">Add {title}</button>
       <button onClick={handleCancelClick} className="btn btn-secondary m-2">{'\u00D7'}</button>

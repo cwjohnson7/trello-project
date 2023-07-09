@@ -3,3 +3,20 @@
   height: 100%;
   border: solid 2px hsl(0, 100%, 0%);
 }
+.addComment {
+  background-color: rgba(173, 200, 210, 0.5);
+  height: 35px;
+  border-radius: 10px;
+  padding-left: 10px;
+  padding-top: 5px;
+}
+.addComment:hover {
+  background-color: rgba(173, 200, 210, 0.8);
+}
+.addCommentForm {
+  background-color: rgba(173, 200, 210, 0.5);
+  width: 100%;
+  border-radius: 10px;
+  border: 0;
+  height: 50px;
+}

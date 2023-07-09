@@ -10,6 +10,7 @@ import AddItem from "../utilities/AddItem";
 const HomeScreen = () => {
   const boards = useSelector((state) => state.homeScreen.boards);
   const { orgId, orgName } = useSelector((state) => state.homeScreen.user);
+console.log(boards);
 
   const navigate = useNavigate();
 
@@ -33,11 +34,11 @@ const HomeScreen = () => {
                 </Card.Body>
               </Card>
             </CardContainer>
-          ))}
+          ))}    
         </Row>
-
-        <AddItem title="Board" orgId={orgId} />  
-      
+ 
+        <AddItem title="Board" orgId={orgId} />
+               
       </Container>
     </HomeScreenContainer>
   )

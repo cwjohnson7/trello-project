@@ -59,47 +59,39 @@ const AddItem = ({ title, boardId, listId, orgId, cardId }) => {
     }
   };
   
-  // Handling the style of the add button dependent on Card, List, or Board
-  const handleAddStyle = () => {
-    switch (title) {
-      case "Card":
-        return styleAddCard.addCard;
-      case "List":
-        return styleAddList.addList;
-      case "Board":
-        return styleAddBoard.addBoard;
-      case "Comment":
-        return styleAddComment.addComment;
-      default:
-        return;
-    };
-  };
-  
-  // Handling the style of the input form dependent on Card, List, or Board
-  const handleInputStyle = () => {
-    switch (title) {
-      case "Card":
-        return styleAddCard.addCardForm;
-      case "List":
-        return styleAddList.addListForm;
-      case "Board":
-        return styleAddBoard.addBoardForm;
-      case "Comment":
-        return styleAddComment.addCommentForm;
-      default:
-        return;
-    };
+  // Handling the AddItem and Input style dependent on Card, List, Board, Comment
+  let addItemStyle;
+  let addInputStyle;
+  switch (title) {
+    case "Card":
+      addItemStyle = styleAddCard.addCard;
+      addInputStyle = styleAddCard.addCardForm;
+      break;
+    case "List":
+      addItemStyle = styleAddList.addList;
+      addInputStyle = styleAddList.addListForm;
+      break;
+    case "Board":
+      addItemStyle = styleAddBoard.addBoard;
+      addInputStyle = styleAddBoard.addBoardForm;
+      break;
+    case "Comment":
+      addItemStyle = styleAddComment.addComment;
+      addInputStyle = styleAddComment.addCommentForm;
+      break;
+    default:
+      return;
   }
 
   return addingItem ? (
     <div >
-      <input type="text" value={inputValue} onChange={handleInputChange} className={handleInputStyle()} placeholder={`Add ${title} Title Here`} autoFocus/>
+      <input type="text" value={inputValue} onChange={handleInputChange} className={addInputStyle} placeholder={`Add ${title} Title Here`} autoFocus/>
       <button onClick={handleSubmitClick} className="btn btn-primary ms-3">Add {title}</button>
       <button onClick={handleCancelClick} className="btn btn-secondary m-2">{'\u00D7'}</button>
       {errorMessage && <p>{errorMessage}</p>} 
     </div>
   ) : (
-    <div onClick={handleAddClick} className={handleAddStyle()}>{"\uFF0B"} Add {title}</div>
+    <div onClick={handleAddClick} className={addItemStyle}>{"\uFF0B"} Add {title}</div>
   );
 };
 

@@ -73,6 +73,7 @@ const List = ({ boardId, listId }) => {
     e.currentTarget.select();
   };
 
+  // Render List title and # of cards or edit list title by clicking
   const renderListTitle = () => {
     return isEditing ? (
 
@@ -107,7 +108,6 @@ const List = ({ boardId, listId }) => {
       ref={drop}
       style={{ backgroundColor: isOver ? "blue" : "#ADC8D2" }}
     >
-      
       {renderListTitle()}
       
       {/* {canDrop ? "Release to drop" : "Drag a box here"} */}

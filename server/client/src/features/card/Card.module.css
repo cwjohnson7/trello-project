@@ -12,16 +12,6 @@
   min-height: 18px;
 }
 
-.cardLabel {
-  margin: 9px;
-  margin-top: 11px;
-  height: 25px;
-  width: 60px;
-}
-.list {
-  font-weight: 700;
-  text-decoration: underline;
-}
 .addComment {
   background-color: rgba(173, 200, 210, 0.5);
   height: 35px;
@@ -29,32 +19,15 @@
   padding-left: 10px;
   padding-top: 5px;
 }
+
 .addComment:hover {
   background-color: rgba(173, 200, 210, 0.8);
 }
+
 .addCommentForm {
   background-color: rgba(173, 200, 210, 0.5);
   width: 100%;
   border-radius: 10px;
   border: 0;
   height: 50px;
-}
-.selectBtn {
-  cursor: pointer;
-}
-.selectBtn:hover {
-  background-color: rgba(173, 200, 210, 0.5);
-}
-.actionButton {
-  cursor: pointer;
-  margin-bottom: 5px;
-  height: 38px;
-  padding-left: 10px;
-  padding-top: 6px;
-  border: 1px solid #dee2e6;
-  border-radius: 5px;
-  background-color: rgba(173, 200, 210, 0.5);
-}
-.actionButton:hover {
-  background-color: rgba(173, 200, 210, 0.8);
 }

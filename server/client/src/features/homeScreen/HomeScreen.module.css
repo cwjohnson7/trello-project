@@ -3,18 +3,12 @@
 }
 
 .cardContainer {
+  height: 8rem;
   margin-bottom: 20px;
 }
 
 .card {
-  height: 8rem;
-  margin: 0 10px 10px 0;
-  background-color: rgb(173, 200, 210);
   cursor: pointer;
-}
-
-.card:hover {
-  background-color: rgba(173, 200, 210, 0.5);
 }
 
 .addBoard {

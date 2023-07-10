@@ -1,3 +1,30 @@
+.boardContainer {
+  padding-top: 150px;
+  height: 100%;
+  margin-left: 50px;
+}
+
+.boardTitle {
+  position: relative;
+  margin-left: 10px;
+}
+
+.boardButton {
+  font-size: 1.25rem;
+  width: fit-content;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  line-height: 1.2;
+  border: 1px;
+}
+
+.boardButton:hover {
+  cursor: pointer;
+  color: gray;
+  text-decoration: underline;
+}
+
 .addList {
   background: rgba(173, 200, 210, 0.5);
   flex-shrink: 0;
@@ -11,9 +38,11 @@
   padding-left: 15px;
   overflow-wrap: break-word;
 }
+
 .addList:hover {
   background-color: rgba(173, 200, 210, 0.3);
 }
+
 .addListForm {
   background-color: rgba(173, 200, 210, 0.5);
   width: 263px;

@@ -3,6 +3,7 @@ const Board = require("./controllers/board");
 const List = require("./controllers/list");
 const Card = require("./controllers/card");
 const Comment = require("./controllers/comment");
+const Activity = require("./controllers/activity");
 
 module.exports = function(app) {
   //for existing users to login. can add another post route for /auth/signup if needed.
@@ -25,13 +26,10 @@ module.exports = function(app) {
   // add/move/remove a card 
   app.post('/api/addCard', Card.addCard)
   app.post('/api/addComment', Comment.addComment)
+  app.post('/api/addActivity', Activity.addActivity)
   // app.post('/api/moveCard', Card.moveCard)
   // app.post('/api/removeCard', Card.removeCard)
 
   //get the card detail for one card on a specific list
   // app.get('/cards/:card')
-
-
-
-
 }

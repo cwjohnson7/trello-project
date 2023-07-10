@@ -22,7 +22,4 @@ exports.addComment = async function (req, res) {
   } catch (err) {
     res.json(err)
   }
-
-  
-
 }

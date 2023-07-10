@@ -117,6 +117,41 @@ export const homeScreenSlice = createSlice({
       });
     },
 
+    moveCardWithinList: ( state, action ) => {
+      const { sourceIndex, targetIndex, listId, boardId } = action.payload;
+      // find board
+      const board = state.boards.find(
+        (board) => board._id === boardId
+      );
+      if (!board) return;
+      // find list
+      const list = board.lists.find(
+        (list) => list._id === listId
+      );
+      if (!list) return;
+      const movedCard = list.cards.find((card) => card.index === sourceIndex);
+      if (sourceIndex < targetIndex) {
+        // Moving down the list. Decrease the index of intervening cards.
+        for (let card of list.cards) {
+          if (card.index > sourceIndex && card.index <= targetIndex) {
+            card.index -= 1;
+          }
+        }
+      } else {
+        // Moving up the list. Increase the index of intervening cards.
+        for (let card of list.cards) {
+          if (card.index >= targetIndex && card.index < sourceIndex) {
+            card.index += 1;
+          }
+        }
+      }
+    
+      // Update the index of the moved card.
+      movedCard.index = targetIndex;
+    
+      return state;
+    },
+
     addCard: (state, action) => {
       // find board
       const board = state.boards.find(
@@ -253,7 +288,7 @@ export const homeScreenSlice = createSlice({
 });
 //const { sourceListId, targetListId, cardId } = req.body;
 
-export const { moveCard, addCard, addList, addBoard } = homeScreenSlice.actions;
+export const { moveCard, moveCardWithinList, addCard, addList, addBoard } = homeScreenSlice.actions;
 export default homeScreenSlice.reducer;
 
 // following section is dedicated to memoised selector functions returned by "reselect" library

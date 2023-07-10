@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import {
   moveCard,
-  listDataSelector,
+  moveCardWithinList,
   moveCardThunk,
 } from "../homeScreen/HomeScreenSlice";
 
@@ -28,36 +28,52 @@ const List = ({ boardId, listId }) => {
 
     return { cards: list.cards, listName: list.name };
   });
-  // // return cards and name belonging to current list
-  // const { cards, listName } = useSelector(state => listDataSelector(state, boardId, listId));
 
   // Make List Droppable and track is List is being dropped (isOver) via monitor funciton of DnD state variable
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
     accept: ItemTypes.CARD,
     canDrop: (item, monitor) => {
-      return item.listId !== listId;
+      return true;
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
     }),
     drop: (item, monitor) => {
-      dispatch(
-        moveCard({
+      const delta = monitor.getDifferenceFromInitialOffset();
+      const moveY = Math.round(delta.y / item.cardHeight);
+      const newIndex = item.index + moveY;
+      console.log(`item cardHeight is ${item.cardHeight}`);
+      console.log(`delta is below`);
+      console.log(delta);
+      console.log(`newIndex is ${newIndex}`);
+
+  
+      if (item.listId !== listId) { // card moved to a different list
+        dispatch(
+          moveCard({
+            boardId,
+            sourceListId: item.listId,
+            targetListId: listId,
+            cardId: item.id,
+            cardName: item.name,
+          })
+        );
+        dispatch(
+          moveCardThunk({
+            sourceListId: item.listId,
+            targetListId: listId,
+            cardId: item.id,
+          })
+        );
+      } else { // card moved within its list
+        dispatch(moveCardWithinList({
+          sourceIndex: item.index,
+          targetIndex: newIndex,
+          listId,
           boardId,
-          sourceListId: item.listId,
-          targetListId: listId,
-          cardId: item.id,
-          cardName: item.name,
-        })
-      );
-      dispatch(
-        moveCardThunk({
-          sourceListId: item.listId,
-          targetListId: listId,
-          cardId: item.id,
-        })
-      );
+        })); 
+      }
       return { listId: listId }; // Return drop result
     },
   }));
@@ -120,7 +136,7 @@ const List = ({ boardId, listId }) => {
         ))}
 
       {/* Just commenting AddItem out for now. Need to figure out how to incorporate styling and logic */}
-      <AddItem title="Add Card" boardId={boardId} listId={listId} />
+      <AddItem title="Card" boardId={boardId} listId={listId} />
 
       {/* <AddCard>
         {"\uFF0B"} Add Card
@@ -130,6 +146,8 @@ const List = ({ boardId, listId }) => {
 };
 
 export default List;
+
+
 
 const ListContainer = styled.div`
   background: #adc8d2;

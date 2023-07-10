@@ -25,10 +25,30 @@ const AddItem = ({ title, boardId, listId, orgId }) => {
     setErrorMessage(null); 
   };
 
+
+ // Move CSS assignment here:
+ let InputSelectorCSS = '';
+ let AddButtonCSS = '';
+
+ switch (title) {
+   case 'Card':
+     InputSelectorCSS = styleAddCard.addCardForm;
+     AddButtonCSS = styleAddCard.addCard;
+     break;
+   case 'List':
+     // Assign appropriate classes for List
+     break;
+   case 'Board':
+     // Assign appropriate classes for Board
+     break;
+   default:
+     console.log('No card title is passed into client/features/list/List.js!');
+ }
+
   const handleSubmitClick = () => {
     if (inputValue.trim() !== '') {
       const _id = generateId(5);
-      // depending on title prop dispatch appropriate action to add card, list, or board
+      // depending on title prop dispatch appropriate action to add card, list, or board AND apply proper styling
       switch (title) {
         case 'Card':
           dispatch(addCard({ boardId, listId, _id, inputValue }));
@@ -52,43 +72,16 @@ const AddItem = ({ title, boardId, listId, orgId }) => {
     }
   };
 
-  const handleAddStyle = () => {
-    if (title === "Add Card") {
-      return styleAddCard.addCard;
-    } 
-  };
-
-  const handleInputStyle = () => {
-    if (title === "Add Card") {
-      return styleAddCard.addCardForm;
-    }
-  }
-
   return addingItem ? (
     <div>
-      <input type="text" value={inputValue} onChange={handleInputChange} className={handleInputStyle()} placeholder="Add Card Title Here" autoFocus/>
+      <input type="text" value={inputValue} onChange={handleInputChange} className={InputSelectorCSS} placeholder="Add Card Title Here" autoFocus/>
       <button onClick={handleSubmitClick} className="btn btn-primary m-2">{title}</button>
       <button onClick={handleCancelClick} className="btn btn-secondary m-2">{'\u00D7'}</button>
       {errorMessage && <p>{errorMessage}</p>} 
     </div>
   ) : (
-    <div onClick={handleAddClick} className={handleAddStyle()}>{"\uFF0B"} {title}</div>
+    <div onClick={handleAddClick} className={AddButtonCSS}>{"\uFF0B"} {title}</div>
   );
 };
 
 export default AddItem;
-
-// VALUES TO PASS INTO REDUX ACTIONS SWITCH CASE BLOCK:
-
-// ADD CARD: 
-// sync:  dispatch(addCard({ boardId, listId, _id, inputValue}))
-// async: dispatch(addCardThunk({ name: inputValue, boardId, listId, tempId: _id}))
-
-
-// ADD LIST: 
-// sync: dispatch(addList({ boardId, _id, inputValue }));
-// async: dispatch(addListThunk({ name: inputValue, boardId, tempId: _id }))
-
-// ADD BOARD:
-// sync: dispatch(addBoard({ _id, inputValue, orgId }))
-// async: dispatch(addBoardThunk({ title: inputValue, tempId: _id, orgId }))

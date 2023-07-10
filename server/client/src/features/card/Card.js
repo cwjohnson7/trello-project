@@ -1,5 +1,4 @@
 import React from "react";
-import styled from "styled-components";
 import { useDrag } from "react-dnd";
 import ItemTypes from "../utilities/ItemTypes";
 import styles from "./Card.module.css"; 
@@ -9,7 +8,6 @@ import { Button, Modal, Form, Container, Row, Col } from "react-bootstrap";
 import { useState } from "react";
 import CardModal from "../CardModal";
 import AddItem from "../utilities/AddItem";
-import { useLocation, matchPath } from "react-router-dom";
 import Comment from "../comment/Comment";
 
 
@@ -59,6 +57,8 @@ const Card = ({ id, name, listId, boardId }) => {
     setDescriptionEditing(false);
   };
 
+  // rendering form for editing card description. I will likely move all this code to its own
+  // file to clean this file up
   const renderCardDescription = () => {
     return descriptionEditing ? (
       <Form>
@@ -81,64 +81,83 @@ const Card = ({ id, name, listId, boardId }) => {
 
   return (
     <div>
-      <CardContainer ref={drag} key={id} style ={{
-        opacity: isDragging? 0.5 : 1
-      }} onClick={handleShowModal}>{name}</CardContainer>
+      {/* Cards displayed in lists */}
+      <div 
+        className={styles.cardContainer}
+        ref={drag} 
+        key={id} 
+        style ={{ opacity: isDragging? 0.5 : 1 }} 
+        onClick={handleShowModal}
+      >
+        {name}
+      </div>
 
-    
-
-      {/* I'm hoping I can figure out a way to have the modal in its own separate feature file/folder */}
+      {/* I'm hoping I can figure out a way to have the modal in its own separate file/folder -William*/}
       <Modal size="lg" show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
+
+          {/* Card Title in modal */}
           <Modal.Title>{name}</Modal.Title>
+
+          {/* Card Label in modal */}
           <div className={styles.cardLabel}style={{ backgroundColor: card.label }}></div>
         </Modal.Header>
+
+        {/* Shows what list the card is part of in the modal */}
         <div className="ps-3">in list <span className={styles.list}>{list.name}</span></div>
+
         <Modal.Body>
-        <Container>
-          <Row>
-            <Col md={8}>
-              <Modal.Body>
-                <Modal.Title>Description</Modal.Title>
-                {renderCardDescription()} 
-              </Modal.Body>
+          <Container>
+            <Row>
+              <Col md={8}>
+                <Modal.Body>
+
+                  {/* Card Description */}
+                  <Modal.Title>Description</Modal.Title>
+                  {renderCardDescription()} 
+                </Modal.Body>
            
-              <Modal.Body>
-                <Modal.Title>Activity</Modal.Title>
-      
-                {/* Will need to figure out what properties to pass here */}
-                <AddItem title="Comment" cardId={id} listId={listId} boardId={boardId} />
+                <Modal.Body>
+
+                  {/* Shows Comments and activities associated with the card */}
+                  <Modal.Title>Activity</Modal.Title>
+
+                  {/* Add Comment Button */}
+                  <AddItem title="Comment" cardId={id} listId={listId} boardId={boardId} />
          
-                <Comment cardId={id} listId={listId} boardId={boardId} />  
-              </Modal.Body>
+                  {/* Displays Comments. Maybe activities and comments can be in the same array */}
+                  <Comment cardId={id} listId={listId} boardId={boardId} />  
+                </Modal.Body>
+              </Col>
 
-            </Col>
-            {/* Styling for label, move card, and archive buttons is added. Still need to add code to make these changes to state */}
-            <Col md={4}>
-              <Modal.Title>Label</Modal.Title>
-              <Form.Select className={styles.selectBtn}>
-                <option>Label</option>
-                <option>None</option>
-                <option>Purple</option>
-                <option>Blue</option>
-                <option>Green</option>
-                <option>Yellow</option>
-                <option>Orange</option>
-                <option>Red</option>
-              </Form.Select>
-              <hr />
-              <Modal.Title>Actions</Modal.Title>
-              <div className={styles.actionButton}>Move</div>
-              <div className={styles.actionButton}>Archive</div>
-              <hr />
-            </Col>
-          </Row>
-        </Container>
-</Modal.Body>
+              {/* Styling for label, move card, and archive buttons is added. Still need to add code to make these changes to state */}
+              <Col md={4}>
 
-          
+                {/* Label Select */}
+                <Modal.Title>Label</Modal.Title>
+                <Form.Select className={styles.selectBtn}>
+                  <option>Label</option>
+                  <option>None</option>
+                  <option>Purple</option>
+                  <option>Blue</option>
+                  <option>Green</option>
+                  <option>Yellow</option>
+                  <option>Orange</option>
+                  <option>Red</option>
+                </Form.Select>
+                <hr />
+
+                {/* Move and Archive buttons */}
+                <Modal.Title>Actions</Modal.Title>
+                <div className={styles.actionButton}>Move</div>
+                <div className={styles.actionButton}>Archive</div>
+                <hr />
+              </Col>
+            </Row>
+          </Container>
+        </Modal.Body>
+
         <Modal.Footer>
-          <Button variant="primary" onClick={handleCloseModal}>Save Changes</Button>
           <Button variant="secondary" onClick={handleCloseModal}>Close</Button>
         </Modal.Footer>
       </Modal>
@@ -148,17 +167,3 @@ const Card = ({ id, name, listId, boardId }) => {
 };
 
 export default Card;
-
-const CardContainer = styled.div`
-  position: relative;
-  cursor: pointer;
-  background: white;
-  margin: 5px;
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  box-shadow: 0 1px 0 rgba(9, 45, 66, 0.25);
-  font-size: 15px;
-  overflow-wrap: break-word;
-  min-height: 18px;
-`;

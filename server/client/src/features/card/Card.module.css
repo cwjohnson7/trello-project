@@ -1,8 +1,17 @@
-.card {
-  width: 100%;
-  height: 100%;
-  border: solid 2px hsl(0, 100%, 0%);
+.cardContainer {
+  position: relative;
+  cursor: pointer;
+  background: white;
+  margin: 5px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 1px 0 rgba(9, 45, 66, 0.25);
+  font-size: 15px;
+  overflow-wrap: break-word;
+  min-height: 18px;
 }
+
 .cardLabel {
   margin: 9px;
   margin-top: 11px;

@@ -1,5 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
-import styled from "styled-components";
+import React, { useMemo, useState } from "react";
 import Card from "../card/Card";
 import styles from "./List.module.css";
 import ItemTypes from "../utilities/ItemTypes";
@@ -89,8 +88,8 @@ const List = ({ boardId, listId }) => {
     },
   }));
 
-  // Render and Edit List Title
-  const [listTitle, setListTitle] = useState("List Title");
+  // Render and Edit List Title 
+  // Still need to add code to change the value in state and database
   const [isEditing, setIsEditing] = useState(false);
 
   const handleTitleChange = (e) => {
@@ -109,69 +108,51 @@ const List = ({ boardId, listId }) => {
     e.currentTarget.select();
   };
 
+  // Render List title and # of cards or edit list title by clicking
   const renderListTitle = () => {
     return isEditing ? (
-      <EditTitle>
-        <input
-          value={listName}
-          onChange={(e) => setListTitle(e.currentTarget.value)}
-          onKeyUp={handleTitleChange}
-          onFocus={handleFocus}
-          autoFocus
-        />
-      </EditTitle>
+
+      <div className={styles.editListTitle}>
+        <input value={listName} onKeyUp={handleTitleChange} onFocus={handleFocus} autoFocus/>
+      </div>
+
     ) : (
-      <ListTitle onClick={handleInitialTitleClick}>{listName}</ListTitle>
+
+      <div className="container">
+        <div className="row pt-2 pb-2">
+
+          <div onClick={handleInitialTitleClick}  className="col-md-8">
+            <div className={styles.listTitle}>
+              {listName}
+            </div>
+          </div>
+
+          <div className="col-md-4">
+            Cards: {cards.length}
+          </div>
+
+        </div>
+      </div>
     );
   };
 
   return (
-    <ListContainer
-      // className={styles.sourceColumn}
+    <div 
+      className={styles.listContainer}
       ref={drop}
       style={{ backgroundColor: isOver ? "blue" : "#ADC8D2" }}
     >
       {renderListTitle()}
-      {/* <ListTitle>{listName}</ListTitle> */}
+      
       {/* {canDrop ? "Release to drop" : "Drag a box here"} */}
-      {cards.map((card, index) => (
-          <Card
-            key={card._id}
-            id={card._id}
-            name={card.name}
-            listId={listId}
-            index={index}
-          />
-        ))}
+      {cards.map((card) => (
+        <Card key={card._id} id={card._id} name={card.name} listId={listId} boardId={boardId}/>
+      ))}
 
-      {/* Just commenting AddItem out for now. Need to figure out how to incorporate styling and logic */}
       <AddItem title="Card" boardId={boardId} listId={listId} />
 
-      {/* <AddCard>
-        {"\uFF0B"} Add Card
-      </AddCard> */}
-    </ListContainer>
+    </div>
   );
 };
 
 export default List;
-
-const ListContainer = styled.div`
-  background: #adc8d2;
-  width: 275px;
-  height: fit-content;
-  margin: 10px;
-  flex-shrink: 0;
-  border-radius: 10px;
-  border: 1px solid rgba(0, 0, 0, 0.12);
-`;
-
-const ListTitle = styled.div`
-  cursor: pointer;
-  padding: 10px;
-  overflow-wrap: break-word;
-`;
-
-const EditTitle = styled.div`
-  padding: 8px;
-`;

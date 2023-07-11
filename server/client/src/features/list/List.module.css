@@ -11,6 +11,26 @@
   max-width: 45%;
 }
 
+.listContainer {
+  background: #adc8d2;
+  width: 275px;
+  height: fit-content;
+  margin: 10px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.listTitle {
+  cursor: pointer;
+  font-weight: 500;
+  overflow-wrap: break-word;
+}
+
+.editListTitle {
+  padding: 8px;
+}
+
 .addCard {
   cursor: pointer;
   margin: 5px;

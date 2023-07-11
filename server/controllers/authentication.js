@@ -29,7 +29,16 @@ exports.signUp = function (req, res, next) {
       if (!existingOrg) {
         let newOrg = new Organization({ name: org });
         newOrg.save();
+
+        const user = new User({
+          email: req.body.email,
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          org: newOrg._id
+        });
+        user.save();
         console.log("NewOrg: ", newOrg);
+        res.send({user, boards})
       }
       const user = new User({
         email: req.body.email,

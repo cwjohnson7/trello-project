@@ -1,0 +1,54 @@
+.boardContainer {
+  padding-top: 150px;
+  height: 100%;
+  margin-left: 50px;
+}
+
+.boardTitle {
+  position: relative;
+  margin-left: 10px;
+}
+
+.boardButton {
+  font-size: 1.25rem;
+  width: fit-content;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  line-height: 1.2;
+  border: 1px;
+}
+
+.boardButton:hover {
+  cursor: pointer;
+  color: gray;
+  text-decoration: underline;
+}
+
+.addList {
+  background: rgba(173, 200, 210, 0.5);
+  flex-shrink: 0;
+  width: 275px;
+  height: 50px;
+  margin: 10px;
+  margin-right: 0;
+  border-radius: 10px;
+  cursor: pointer;
+  padding: 12px;
+  padding-left: 15px;
+  overflow-wrap: break-word;
+}
+
+.addList:hover {
+  background-color: rgba(173, 200, 210, 0.3);
+}
+
+.addListForm {
+  background-color: rgba(173, 200, 210, 0.5);
+  width: 263px;
+  height: 60px;
+  margin: 10px;
+  margin-bottom: 5px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}

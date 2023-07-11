@@ -18,9 +18,6 @@ const Header = (props) => {
     <NavContainer>
       <Container fluid>
         <Row className="align-items-center">
-          <Col md={1}>
-            <Image src="favicon.ico" fluid />
-          </Col>
           <Col md={{ span: 8, offset: 1 }}>
             <h1 className="display-3"><strong>Trello Jr</strong></h1>
           </Col>

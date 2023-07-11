@@ -19,7 +19,24 @@ const initialState = {
           _id: "j2h43",
           name: "To Do",
           cards: [
-            { _id: "sdfff", name: "Work Out" },
+            { _id: "sdfff",
+              name: "Work Out",
+              description: "I am going to go to the gym",
+              label: "green", 
+              comments: [
+                {
+                  _id: "aqwed",
+                  createdBy: "User",
+                  cardId: "sdfff",
+                  text: "The gym was closed today."
+                },
+                {
+                  _id: "owefn",
+                  createdBy: "User2",
+                  cardId: "sdfff",
+                  text: "Let's go tomorrow then."
+                }
+            ] },
             { _id: "234dd", name: "Meal Prep" },
             { _id: "dgdsf", name: "Walk a Dog" },
             { _id: "gsf32", name: "Practice Coding" },
@@ -72,6 +89,12 @@ export const addListThunk = createThunk(
 export const addBoardThunk = createThunk(
   "homeScreen/addBoardThunk",
   "/api/addBoard",
+  "POST"
+);
+
+export const addCommentThunk = createThunk(
+  "homeScreen/addCommentThunk",
+  "/api/addComment",
   "POST"
 );
 
@@ -159,6 +182,33 @@ export const homeScreenSlice = createSlice({
         org: action.payload.org,
         title: action.payload.inputValue,
       });
+    },
+
+    addComment: (state, action) => {
+      // find board
+      const board = state.boards.find(
+        (board) => board._id === action.payload.boardId
+      );
+      if (!board) return;
+
+      // find list
+      const list = board.lists.find(
+        (list) => list._id === action.payload.listId
+      );
+      if (!list) return;
+
+      // find card
+      const card = list.cards.find(
+        (card) => card._id === action.payload.cardId
+      );
+      if (!card) return;
+
+      //push comment to comments array within card
+      card.comments.push({
+        _id: action.payload._id,
+        cardId: action.payload.cardId,
+        text: action.payload.inputValue,
+      })
     },
   },
   extraReducers: (builder) => {
@@ -248,12 +298,48 @@ export const homeScreenSlice = createSlice({
       .addCase(addBoardThunk.rejected, (state, action) => {
         state.status = "rejected";
         state.error = action.payload;
-      });
+      })
+      .addCase(addCommentThunk.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(addCommentThunk.fulfilled, (state, action) => {
+        state.status = "fulfilled";
+        state.error = null;
+        // find board
+        const board = state.boards.find(
+          (board) => board._id === action.payload.boardId
+        );
+        if (!board) return;
+
+        // find list in the board
+        const list = board.lists.find(
+          (list) => list._id === action.payload.listId
+        );
+        if (!list) return;
+        // find card in the list
+        const card = list.cards.find(
+          (card) => card._id === action.payload.cardId
+        );
+        if (!card) return;
+
+        // find comment in the list by its temp Id
+        const comment = card.comments.find(
+          (comment) => comment._id === action.payload.tempId
+        );
+        
+        // update comment's _id with the new _id from the payload
+        comment._id = action.payload.comment._id;
+      })
+      .addCase(addCommentThunk.rejected, (state, action) => {
+        state.status = "rejected";
+        state.error = action.payload;
+      })
   },
 });
 //const { sourceListId, targetListId, cardId } = req.body;
 
-export const { moveCard, addCard, addList, addBoard } = homeScreenSlice.actions;
+export const { moveCard, addCard, addList, addBoard, addComment } = homeScreenSlice.actions;
 export default homeScreenSlice.reducer;
 
 // following section is dedicated to memoised selector functions returned by "reselect" library

@@ -7,8 +7,8 @@ const initialState = {
     _id: "sf24d",
     firstName: "Yegor",
     lastName: "Rodin",
-    orgId: '64a720b83b8a0cd93ea4f327',
-    orgName: "Parsity"
+    orgId: "64a720b83b8a0cd93ea4f327",
+    orgName: "Parsity",
   },
   boards: [
     {
@@ -19,13 +19,22 @@ const initialState = {
           _id: "j2h43",
           name: "To Do",
           cards: [
-            { _id: "sdfff", name: "Work Out", index: 1 },
-            { _id: "234dd", name: "Meal Prep", index: 2 },
-            { _id: "dgdsf", name: "Walk a Dog", index: 3 },
-            { _id: "gsf32", name: "Practice Coding", index: 4 },
+            { _id: "sdfff", name: "List 1 Card 1", index: 0 },
+            { _id: "234dd", name: "List 1 Card 2", index: 1 },
+            { _id: "dgdsf", name: "List 1 Card 3", index: 2 },
+            { _id: "gsf32", name: "List 1 Card 4", index: 3 },
           ],
         },
-        { _id: "34rfc", name: "Doing", cards: [] },
+        {
+          _id: "34rfc",
+          name: "Doing",
+          cards: [
+            { _id: "vvbbh", name: "List 2 Card 1", index: 0 },
+            { _id: "9idfd", name: "List 2 Card 2", index: 1 },
+            { _id: "00233", name: "List 2 Card 3", index: 2 },
+            { _id: "vdfv4", name: "List 2 Card 4", index: 3 },
+          ],
+        },
         { _id: "ok097", name: "Done", cards: [] },
       ],
     },
@@ -80,74 +89,49 @@ export const homeScreenSlice = createSlice({
   initialState,
   reducers: {
     moveCard: (state, action) => {
-      // find and remove card from its original list
-      // find board
-      const board = state.boards.find(
-        (board) => board._id === action.payload.boardId
-      );
+      const { boardId, sourceListId, targetListId, cardId } = action.payload;
+
+      const board = state.boards.find((board) => board._id === boardId);
       if (!board) return;
 
-      // find list in the board
-      const list = board.lists.find(
-        (list) => list._id === action.payload.sourceListId
-      );
-      if (!list) return;
-
-      // find index of the card in the list
-      const cardIndex = list.cards.findIndex(
-        (card) => card._id === action.payload.cardId
-      );
-
-      // remove card from the list if found
-      if (cardIndex !== -1) {
-        list.cards.splice(cardIndex, 1);
-      }
+      // find source list
+      const sourceList = board.lists.find((list) => list._id === sourceListId);
+      if (!sourceList) return;
 
       // find target list
-      const targetList = board.lists.find(
-        (list) => list._id === action.payload.targetListId
-      );
+      const targetList = board.lists.find((list) => list._id === targetListId);
       if (!targetList) return;
 
+      // find the moved card in the source list
+      const movedCard = sourceList.cards.find((card) => card._id === cardId);
+      if (!movedCard) return;
+
+      // remove the moved card from the source list
+      sourceList.cards = sourceList.cards.filter((card) => card._id !== cardId);
+
       // add card to target list
-      targetList.cards.push({
-        _id: action.payload.cardId,
-        name: action.payload.cardName,
-        // other card properties...
-      });
+      targetList.cards.push(movedCard);
+
+      return state;
     },
 
-    moveCardWithinList: ( state, action ) => {
+    moveCardWithinList: (state, action) => {
       const { sourceIndex, targetIndex, listId, boardId } = action.payload;
-      // find board
-      const board = state.boards.find(
-        (board) => board._id === boardId
-      );
-      if (!board) return;
-      // find list
-      const list = board.lists.find(
-        (list) => list._id === listId
-      );
-      if (!list) return;
-      const movedCard = list.cards.find((card) => card.index === sourceIndex);
-      if (sourceIndex < targetIndex) {
-        // Moving down the list. Decrease the index of intervening cards.
-        for (let card of list.cards) {
-          if (card.index > sourceIndex && card.index <= targetIndex) {
-            card.index -= 1;
-          }
-        }
-      } else {
-        // Moving up the list. Increase the index of intervening cards.
-        for (let card of list.cards) {
-          if (card.index >= targetIndex && card.index < sourceIndex) {
-            card.index += 1;
-          }
-        }
-      }
     
-      // Update the index of the moved card.
-      movedCard.index = targetIndex;
+      // find board
+      const board = state.boards.find((board) => board._id === boardId);
+      if (!board) return;
+    
+      // find list
+      const list = board.lists.find((list) => list._id === listId);
+      if (!list) return;
+    
+      // pull out the card from the source position
+      const [movedCard] = list.cards.splice(sourceIndex, 1);
+      if (!movedCard) return;
+    
+      // insert the moved card at the target position
+      list.cards = [...list.cards.slice(0, targetIndex), movedCard, ...list.cards.slice(targetIndex)];
     
       return state;
     },
@@ -176,10 +160,10 @@ export const homeScreenSlice = createSlice({
         (board) => board._id === action.payload.boardId
       );
       if (!board) {
-        console.log('no board found inside addList reducer!');
+        console.log("no board found inside addList reducer!");
         return;
       }
-      
+
       // add list to board
       board.lists.push({
         _id: action.payload._id,
@@ -288,7 +272,8 @@ export const homeScreenSlice = createSlice({
 });
 //const { sourceListId, targetListId, cardId } = req.body;
 
-export const { moveCard, moveCardWithinList, addCard, addList, addBoard } = homeScreenSlice.actions;
+export const { moveCard, moveCardWithinList, addCard, addList, addBoard } =
+  homeScreenSlice.actions;
 export default homeScreenSlice.reducer;
 
 // following section is dedicated to memoised selector functions returned by "reselect" library

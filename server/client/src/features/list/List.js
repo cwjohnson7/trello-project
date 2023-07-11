@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import styled from "styled-components";
 import Card from "../card/Card";
 import styles from "./List.module.css";
@@ -30,33 +30,50 @@ const List = ({ boardId, listId }) => {
   });
 
   // Make List Droppable and track is List is being dropped (isOver) via monitor funciton of DnD state variable
+
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
     accept: ItemTypes.CARD,
-    canDrop: (item, monitor) => {
-      return true;
-    },
+
     collect: (monitor) => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
     }),
     drop: (item, monitor) => {
-      const delta = monitor.getDifferenceFromInitialOffset();
-      const moveY = Math.round(delta.y / item.cardHeight);
-      const newIndex = item.index + moveY;
-      console.log(`item cardHeight is ${item.cardHeight}`);
-      console.log(`delta is below`);
-      console.log(delta);
-      console.log(`newIndex is ${newIndex}`);
+      // Check if the hover is happening over the list to prevent index miscalculation
+      if (!monitor.isOver()) {
+        return;
+      }
 
-  
-      if (item.listId !== listId) { // card moved to a different list
+      let newIndex;
+      const delta = monitor.getDifferenceFromInitialOffset();
+      let moveY = Math.round(delta.y / item.cardHeight);
+      console.log(`moveY is ${moveY}`);
+
+      // The card is being moved within the same list
+      if (item.listId === listId) {
+
+        newIndex = item.index + Math.round(moveY);
+
+        // Ensure the new index stays within the range of 0 to cards.length - 1
+        newIndex = Math.max(0, newIndex);
+        newIndex = Math.min(cards.length - 1, newIndex);
+
+        dispatch(
+          moveCardWithinList({
+            sourceIndex: item.index,
+            targetIndex: newIndex,
+            listId,
+            boardId,
+          })
+        );
+      } else {
+        // card is moved to a different list, add to the end of targetList
         dispatch(
           moveCard({
             boardId,
             sourceListId: item.listId,
             targetListId: listId,
             cardId: item.id,
-            cardName: item.name,
           })
         );
         dispatch(
@@ -66,14 +83,8 @@ const List = ({ boardId, listId }) => {
             cardId: item.id,
           })
         );
-      } else { // card moved within its list
-        dispatch(moveCardWithinList({
-          sourceIndex: item.index,
-          targetIndex: newIndex,
-          listId,
-          boardId,
-        })); 
       }
+
       return { listId: listId }; // Return drop result
     },
   }));
@@ -123,15 +134,13 @@ const List = ({ boardId, listId }) => {
       {renderListTitle()}
       {/* <ListTitle>{listName}</ListTitle> */}
       {/* {canDrop ? "Release to drop" : "Drag a box here"} */}
-      {[...cards]
-        .sort((a, b) => a.index - b.index)
-        .map((card) => (
+      {cards.map((card, index) => (
           <Card
             key={card._id}
             id={card._id}
             name={card.name}
             listId={listId}
-            index={card.index}
+            index={index}
           />
         ))}
 
@@ -146,8 +155,6 @@ const List = ({ boardId, listId }) => {
 };
 
 export default List;
-
-
 
 const ListContainer = styled.div`
   background: #adc8d2;
@@ -168,13 +175,3 @@ const ListTitle = styled.div`
 const EditTitle = styled.div`
   padding: 8px;
 `;
-
-// const AddCard = styled.div`
-//   cursor: pointer;
-//   margin: 5px;
-//   padding: 3px;
-//   border-radius: 10px;
-//   &:hover {
-//     background-color: rgb(222, 237, 237);
-//   }
-// `;

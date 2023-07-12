@@ -27,7 +27,7 @@ exports.getUserBoards = async function (req, res, next) {
       title: 'TEST BOARD',
     });
     await board.save();
-    res.send(board);
+    res.send({ boards: [board]});
   } else {
     const boards = await Board.find({ org: orgId }).populate({
       path: "lists",

@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createSelector } from "reselect";
 import createThunk from "../utilities/createThunk";
+const apiBaseURL = process.env.REACT_APP_API_URL
+
 
 const initialState = {
   user: {},
@@ -10,37 +11,37 @@ const initialState = {
 // requests to add card in DB and replaces redux card's tempId with DB card._id
 export const getUserBoardsThunk = createThunk(
   "homeScreen/getUserBoardsThunk",
-  "/api/getUserBoards",
+  `${apiBaseURL}/api/getUserBoards`,
   "GET"
 )
 
 export const addCardThunk = createThunk(
   "homeScreen/addCardThunk",
-  "/api/addCard",
+  `${apiBaseURL}/api/addCard`,
   "POST"
 );
 
 export const moveCardThunk = createThunk(
   "homeScreen/moveCardThunk",
-  "/api/moveCard",
+  `${apiBaseURL}/api/moveCard`,
   "PUT"
 );
 
 export const addListThunk = createThunk(
   "homeScreen/addListThunk",
-  "/api/addList",
+  `${apiBaseURL}/api/addList`,
   "POST"
 );
 
 export const addBoardThunk = createThunk(
   "homeScreen/addBoardThunk",
-  "/api/addBoard",
+  `${apiBaseURL}/api/addBoard`,
   "POST"
 );
 
 export const addCommentThunk = createThunk(
   "homeScreen/addCommentThunk",
-  "/api/addComment",
+  `${apiBaseURL}/api/addComment`,
   "POST"
 );
 
@@ -174,7 +175,7 @@ export const homeScreenSlice = createSlice({
         state.error = null;
       })
       .addCase(getUserBoardsThunk.fulfilled, (state, action) => {
-        state.boards = [...state.boards, ...action.payload];
+        state.boards = action.payload.boards;
         state.status = "fulfilled";
         state.error = null;
       })

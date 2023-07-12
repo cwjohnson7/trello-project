@@ -11,9 +11,10 @@ import { useEffect } from "react";
 const HomeScreen = () => {
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(getUserBoardsThunk())
-  }, [getUserBoardsThunk]);
+  function clickHandler() {
+    console.log('clickhandler is hit!')
+    dispatch(getUserBoardsThunk());
+  }
 
   const boards = useSelector((state) => state.homeScreen.boards);
   const { orgId, orgName } = useSelector((state) => state.homeScreen.user);
@@ -44,9 +45,10 @@ const HomeScreen = () => {
           ))} 
              
         </Row>
+        <button onClick={clickHandler}>GET USER BOARDS</button>
  
         <AddItem title="Board" orgId={orgId} />
-               
+        
       </Container>
     </div>
   )

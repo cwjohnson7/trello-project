@@ -8,7 +8,7 @@ const createThunk = (name, apiEndPoint, method) => {
 
       switch (method) {
         case 'GET':
-          response = await axios.get(apiEndPoint, data);
+          response = await axios.get(apiEndPoint);
           break;
         case 'POST':
           response = await axios.post(apiEndPoint, data);

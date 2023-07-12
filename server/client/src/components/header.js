@@ -22,11 +22,6 @@ const Header = () => {
   const authenticated = useSelector(state => state.auth.authenticated);
   const email = useSelector(state => state.auth.email);
   
-
-  
-
-  
-
   const handleSignOutClick = () => {
     dispatch(signout(() => {
       navigate("/");
@@ -38,10 +33,10 @@ const Header = () => {
       return (
         <Fragment>
           <Col md={2}>
-            <div>{email}</div>
+            <UserEmailDiv>{email}</UserEmailDiv>
           </Col>
           <Col>
-          <div onClick={handleSignOutClick}>Sign Out</div>
+          <SignOutDiv onClick={handleSignOutClick}>Sign Out</SignOutDiv>
           </Col>
         </Fragment>
       );
@@ -75,4 +70,15 @@ const NavContainer = styled.div`
   width: 100%;
   height: auto;
   padding: 1.5em;
+`;
+
+const UserEmailDiv = styled.div`
+  font-size: 30px;
+`;
+
+const SignOutDiv = styled.div`
+  font-size: 25px;
+  &:hover {
+    text-decoration: underline;
+  }
 `;

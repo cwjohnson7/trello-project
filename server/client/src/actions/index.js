@@ -3,6 +3,7 @@ import { AUTH_USER, AUTH_ERROR } from "./types";
 
 export const signup = (formProps, callback) => dispatch => {
   axios.post(
+    // localhost will need to change
     "http://localhost:8000/api/signup",
     formProps
   ).then(function (response) {

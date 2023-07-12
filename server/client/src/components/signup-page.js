@@ -81,7 +81,7 @@ const Signup = () => {
 
           <Form.Group as={Row} className="mb-3">
             <Col>
-              <Button>Sign Up</Button>
+              <Button type="submit" >Sign Up</Button>
             </Col>
             <Col>
               <Button onClick={handleBackButton}>Back to Login</Button>

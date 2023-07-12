@@ -1,8 +1,11 @@
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Image from "react-bootstrap/Image";
+import { Container, Row, Col }from "react-bootstrap";
 import styled from "styled-components";
+import { NavLink, Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { Fragment } from "react";
+import { signout } from "../actions";
+import { useEffect } from "react";
+import { fetchUser } from "../actions";
 
 // Using React-Bootstrap and style-components. 
 // I will try to style more as the project goes on. 
@@ -12,18 +15,49 @@ import styled from "styled-components";
 // My simple idea for Login Info is to have a dropdown that says "Please Log In" or
 //   if user is logged in then it will say "Username is currently logged in" and
 //   maybe add a Sign Out but there as well.
-const Header = (props) => {
+const Header = () => {
+  
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const authenticated = useSelector(state => state.auth.authenticated);
+  const email = useSelector(state => state.auth.email);
+  
+
+  
+
+  
+
+  const handleSignOutClick = () => {
+    dispatch(signout(() => {
+      navigate("/");
+    }));
+  };
+
+  const renderLinks = () => {
+    if (authenticated) {
+      return (
+        <Fragment>
+          <Col md={2}>
+            <div>{email}</div>
+          </Col>
+          <Col>
+          <div onClick={handleSignOutClick}>Sign Out</div>
+          </Col>
+        </Fragment>
+      );
+    } else {
+      return;
+    }
+  }
 
   return (
     <NavContainer>
       <Container fluid>
         <Row className="align-items-center">
-          <Col md={{ span: 8, offset: 1 }}>
+          <Col md={{ span: 7, offset: 1 }}>
             <h1 className="display-3"><strong>Trello Jr</strong></h1>
           </Col>
-          <Col md={2}>
-            <p>Login Info</p>
-          </Col>
+          {renderLinks()}
         </Row>
       </Container>
     </NavContainer>

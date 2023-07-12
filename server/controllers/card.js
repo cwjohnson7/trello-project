@@ -3,7 +3,7 @@ const List = require("../models/list");
 const Board = require("../models/board");
 
 exports.addCard = function (req, res, next) {
-  const { name, description, tempId, listId, boardId, index } = req.body;
+  const { name, description, tempId, listId, boardId } = req.body;
   const id = req.body.listId;
   
   List.findById(id)
@@ -11,7 +11,7 @@ exports.addCard = function (req, res, next) {
     const card = new Card({
       name: name,
       description: description,
-      index: index,
+      archived: false,
       label: 'none',
       list: result._id,
       board: result.board
@@ -73,6 +73,14 @@ exports.moveCard = async function(req, res, next) {
 res.send({movedCard, sourceListResult, targetListResult})
 }
 
-// exports.removeCard = function(req, res, next) {
+exports.removeCard = async function(req, res, next) {
+  const { cardId } = req.body;
 
-// }
+  const removedCard = await Card.findById(cardId);
+  const list = await List.findById(removedCard.list);
+  removedCard.archived = true;
+  const cardIndex = list.cards.indexOf(cardId);
+  list.cards.splice(cardIndex, 1)
+
+  res.status(200).send({ removedCard, list }) 
+}

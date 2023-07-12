@@ -28,7 +28,7 @@ module.exports = function(app) {
   app.post('/api/addComment', Comment.addComment)
   app.post('/api/addActivity', Activity.addActivity)
   app.post('/api/moveCard', Card.moveCard)
-  // app.post('/api/removeCard', Card.removeCard)
+  app.post('/api/removeCard', Card.removeCard)
 
   //get the card detail for one card on a specific list
   // app.get('/cards/:card')

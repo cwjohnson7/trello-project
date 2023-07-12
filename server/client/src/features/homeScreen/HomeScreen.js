@@ -1,12 +1,20 @@
 import styled from "styled-components";
 import { Container, Card, Row, Col } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import AddItem from "../utilities/AddItem";
 import styles from "./HomeScreen.module.css";
+import { getUserBoardsThunk } from "./HomeScreenSlice";
+import { useEffect } from "react";
 
 // HomeScreen Component
 const HomeScreen = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getUserBoardsThunk())
+  }, [getUserBoardsThunk]);
+
   const boards = useSelector((state) => state.homeScreen.boards);
   const { orgId, orgName } = useSelector((state) => state.homeScreen.user);
 

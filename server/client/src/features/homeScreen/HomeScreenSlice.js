@@ -3,70 +3,17 @@ import { createSelector } from "reselect";
 import createThunk from "../utilities/createThunk";
 
 const initialState = {
-  user: {
-    _id: "sf24d",
-    firstName: "Yegor",
-    lastName: "Rodin",
-    orgId: "64a720b83b8a0cd93ea4f327",
-    orgName: "Parsity",
-  },
-  boards: [
-    {
-      _id: "089sd",
-      title: "Daily Planner",
-      lists: [
-        {
-          _id: "j2h43",
-          name: "To Do",
-          cards: [
-            { _id: "sdfff",
-              name: "Work Out",
-              description: "I am going to go to the gym",
-              label: "green", 
-              comments: [
-                {
-                  _id: "aqwed",
-                  createdBy: "User",
-                  cardId: "sdfff",
-                  text: "The gym was closed today."
-                },
-                {
-                  _id: "owefn",
-                  createdBy: "User2",
-                  cardId: "sdfff",
-                  text: "Let's go tomorrow then."
-                }
-            ] },
-            { _id: "234dd", name: "Meal Prep" },
-            { _id: "dgdsf", name: "Walk a Dog" },
-            { _id: "gsf32", name: "Practice Coding" },
-          ],
-        },
-        { _id: "ok097", name: "Done", cards: [] },
-      ],
-    },
-    {
-      _id: "klm87",
-      title: "Networking",
-      lists: [
-        {
-          _id: "kiji5",
-          name: "To Do",
-          cards: [
-            { _id: "vvbbh", name: "Attend Meetup", index: 1 },
-            { _id: "9idfd", name: "Follow up with CTO", index: 2 },
-            { _id: "00233", name: "Post on LinkedIn", index: 3 },
-            { _id: "vdfv4", name: "Speak at a Conference", index: 4 },
-          ],
-        },
-        { _id: "sdf34", name: "Doing", cards: [] },
-        { _id: "09fgd", name: "Done", cards: [] },
-      ],
-    },
-  ],
+  user: {},
+  boards: []
 };
 
 // requests to add card in DB and replaces redux card's tempId with DB card._id
+export const getUserBoardsThunk = createThunk(
+  "homeScreen/getUserBoardsThunk",
+  "/api/getUserBoards",
+  "GET"
+)
+
 export const addCardThunk = createThunk(
   "homeScreen/addCardThunk",
   "/api/addCard",
@@ -222,6 +169,19 @@ export const homeScreenSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(getUserBoardsThunk.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(getUserBoardsThunk.fulfilled, (state, action) => {
+        state.boards = [...state.boards, ...action.payload];
+        state.status = "fulfilled";
+        state.error = null;
+      })
+      .addCase(getUserBoardsThunk.rejected, (state, action) => {
+        state.status = "rejected";
+        state.error = action.payload;
+      })
       .addCase(addCardThunk.pending, (state) => {
         state.status = "loading";
         state.error = null;
@@ -346,43 +306,9 @@ export const homeScreenSlice = createSlice({
       })
   },
 });
-//const { sourceListId, targetListId, cardId } = req.body;
 
-export const { moveCard, moveCardWithinList, addCard, addList, addBoard } =
+export const { moveCard, moveCardWithinList, addCard, addList, addBoard, addComment } =
   homeScreenSlice.actions;
+
 export default homeScreenSlice.reducer;
 
-// following section is dedicated to memoised selector functions returned by "reselect" library
-
-// define input selectors for listDataSelector used inside List.js
-
-const getBoards = (state) => state.homeScreen.boards;
-// following two input selectors use props passed to List component from Board component
-const getBoardId = (_, boardId) => boardId;
-const getListId = (_, listId) => listId;
-
-export const listDataSelector = createSelector(
-  getBoards,
-  getBoardId,
-  getListId,
-  (boards, boardId, listId) => {
-    console.log(`boards below`);
-    console.log(boards);
-
-    console.log(`boardId below`);
-    console.log(boardId);
-
-    console.log(`listId below`);
-    console.log(listId);
-
-    const board = boards.find((board) => board._id === boardId);
-    // console.log('Found board:', board);
-    if (!board) return { cards: [], name: "" };
-
-    const list = board.lists.find((list) => list._id === listId);
-    // console.log('Found list:', list);
-    if (!list) return { cards: [], name: "" };
-
-    return { cards: list.cards, listName: list.name };
-  }
-);

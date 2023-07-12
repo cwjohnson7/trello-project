@@ -12,7 +12,6 @@ const HomeScreen = () => {
   const dispatch = useDispatch();
 
   function clickHandler() {
-    console.log('clickhandler is hit!')
     dispatch(getUserBoardsThunk());
   }
 

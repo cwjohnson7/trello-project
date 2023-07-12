@@ -5,7 +5,6 @@ const CardSchema = new Schema({
   name: String,
   description: String,
   label: String,
-  index: Number,
   list: { type: Schema.Types.ObjectId, ref: "list" },
   board: { type: Schema.Types.ObjectId, ref: "board" },
   comments: [{ type: Schema.Types.ObjectId, ref: "comment" }],

@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import createThunk from "../utilities/createThunk";
-const apiBaseURL = process.env.REACT_APP_API_URL
+const apiBaseURL = process.env.REACT_APP_API_URL;
 
 
 const initialState = {
@@ -236,7 +236,7 @@ export const homeScreenSlice = createSlice({
         // update list._id from temp to DB id
         // find board
         const board = state.boards.find(
-          (board) => board._id === action.payload.boardId
+          (board) => board._id === action.payload.list.board
         );
         if (!board) return;
 
@@ -257,13 +257,14 @@ export const homeScreenSlice = createSlice({
         state.error = null;
       })
       .addCase(addBoardThunk.fulfilled, (state, action) => {
+        const {tempId, board } = action.payload;
         state.status = "fulfilled";
         state.error = null;
         // update board._id from temp to DB id
-        const board = state.boards.find(
-          (board) => board._id === action.payload.tempId
+        const boardRedux = state.boards.find(
+          (board) => board._id === tempId
         );
-        board._id = action.payload.board._id;
+        boardRedux._id = board._id;
       })
       .addCase(addBoardThunk.rejected, (state, action) => {
         state.status = "rejected";

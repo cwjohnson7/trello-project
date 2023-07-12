@@ -1,15 +1,22 @@
 const Authentication = require("./controllers/authentication");
+const passportService = require("./services/passport");
+const passport = require("passport");
 const Board = require("./controllers/board");
 const List = require("./controllers/list");
 const Card = require("./controllers/card");
 const Comment = require("./controllers/comment");
 const Activity = require("./controllers/activity");
 
+const requireAuth = passport.authenticate("jwt", { session: false });
+const requireSignin = passport.authenticate("local", { session: false });
+
 module.exports = function(app) {
   //for existing users to login. can add another post route for /auth/signup if needed.
   app.post('/api/addOrg', Authentication.addOrg)
   app.post('/api/signup', Authentication.signUp)
-  // app.post('/auth/signin', Authentication.signIn)
+  app.post('/api/signin', requireSignin, Authentication.signIn)
+
+  app.get('/api/current_user', requireAuth, Authentication.currentUser);
   
 
   //create a new board

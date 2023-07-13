@@ -38,6 +38,4 @@ module.exports = function(app) {
   app.post('/api/updateCardDescription', requireAuth, Card.updateCardDescription)
   app.post('/api/removeCard', requireAuth, Card.removeCard)
 
-  //get the card detail for one card on a specific list
-  // app.get('/cards/:card')
 }

@@ -32,7 +32,7 @@ const Header = () => {
     if (authenticated) {
       return (
         <Fragment>
-          <Col md={2}>
+          <Col md={2} style={{ width: "fit-content" }}>
             <UserEmailDiv>{email}</UserEmailDiv>
           </Col>
           <Col>
@@ -49,7 +49,7 @@ const Header = () => {
     <NavContainer>
       <Container fluid>
         <Row className="align-items-center">
-          <Col md={{ span: 7, offset: 1 }}>
+          <Col md={{ span: 6, offset: 1 }}>
             <h1 className="display-3"><strong>Trello Jr</strong></h1>
           </Col>
           {renderLinks()}

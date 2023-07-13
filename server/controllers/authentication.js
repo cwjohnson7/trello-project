@@ -12,7 +12,7 @@ function tokenForUser(user) {
 exports.addOrg = function (req, res) {
   console.log(req.body, "org");
   const newOrg = new Organization({
-    name: req.body.orgName,
+    name: req.body.org,
   });
   newOrg.save();
   res.send(newOrg);
@@ -58,7 +58,7 @@ exports.currentUser = function(req, res) {
 exports.signUp = function (req, res, next) {
   const email = req.body.email;
   const password = req.body.password;
-  const org = req.body.orgName;
+  const org = req.body.org;
   console.log(req.body, "sign UP");
 
   if (!email || !password) {
@@ -92,17 +92,18 @@ exports.signUp = function (req, res, next) {
         });
         console.log("NewOrg: ", newOrg);
         // res.send({user, boards})
-      }
-      const user = new User({
+      } else {
+        const user = new User({
         email: req.body.email,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         org: existingOrg._id,
-      });
-      user.setPassword(password);
-      user.save().then(() => {
-        res.json({ token: tokenForUser(user) })
-      });
+        });
+        user.setPassword(password);
+        user.save().then(() => {
+          res.json({ token: tokenForUser(user) })
+        })
+      };
 
       // res.send({user, boards});
     });

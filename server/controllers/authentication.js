@@ -18,9 +18,10 @@ exports.addOrg = function (req, res) {
   res.send(newOrg);
 };
 
-exports.signIn = function(req, res, next) {
+exports.signIn = async function(req, res, next) {
   res.send({
-    token: tokenForUser(req.user)
+    token: tokenForUser(req.user),
+    /*boards*/
   })
 }
 
@@ -69,7 +70,6 @@ exports.signUp = function (req, res, next) {
           res.json({ token: tokenForUser(user) })
         });
         console.log("NewOrg: ", newOrg);
-        // res.send({user, boards})
       } else {
         const user = new User({
         email: req.body.email,
@@ -82,8 +82,6 @@ exports.signUp = function (req, res, next) {
           res.json({ token: tokenForUser(user) })
         })
       };
-
-      // res.send({user, boards});
     });
   });
 };

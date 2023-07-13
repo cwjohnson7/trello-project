@@ -18,9 +18,31 @@ exports.addOrg = function (req, res) {
   res.send(newOrg);
 };
 
-exports.signIn = function(req, res, next) {
+exports.signIn = async function(req, res, next) {
+  // const { email } = req.body;
+  // const user = await User.findOne({email: email});
+  // const boards = await Board.find({org: user.org})
+  // .populate({
+  //   path: 'lists',
+  //   model: 'list',
+  //   populate: {
+  //     path: 'cards',
+  //     model:'card',
+  //     populate: [{
+  //       path: 'comments',
+  //       model: 'comment'
+  //     },
+  //     {
+  //       path: 'activities',
+  //       model: 'activity'
+  //     }
+  //   ]
+  //   }
+  // })
+
   res.send({
-    token: tokenForUser(req.user)
+    token: tokenForUser(req.user),
+    /*boards*/
   })
 }
 

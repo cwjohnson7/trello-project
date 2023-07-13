@@ -19,27 +19,6 @@ exports.addOrg = function (req, res) {
 };
 
 exports.signIn = async function(req, res, next) {
-  // const { email } = req.body;
-  // const user = await User.findOne({email: email});
-  // const boards = await Board.find({org: user.org})
-  // .populate({
-  //   path: 'lists',
-  //   model: 'list',
-  //   populate: {
-  //     path: 'cards',
-  //     model:'card',
-  //     populate: [{
-  //       path: 'comments',
-  //       model: 'comment'
-  //     },
-  //     {
-  //       path: 'activities',
-  //       model: 'activity'
-  //     }
-  //   ]
-  //   }
-  // })
-
   res.send({
     token: tokenForUser(req.user),
     /*boards*/
@@ -91,7 +70,6 @@ exports.signUp = function (req, res, next) {
           res.json({ token: tokenForUser(user) })
         });
         console.log("NewOrg: ", newOrg);
-        // res.send({user, boards})
       } else {
         const user = new User({
         email: req.body.email,
@@ -104,8 +82,6 @@ exports.signUp = function (req, res, next) {
           res.json({ token: tokenForUser(user) })
         })
       };
-
-      // res.send({user, boards});
     });
   });
 };

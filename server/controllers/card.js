@@ -84,3 +84,17 @@ exports.removeCard = async function(req, res, next) {
 
   res.status(200).send({ removedCard, list }) 
 }
+
+exports.updateCardName = async function (req, res) {
+  const { cardId, name } = req.body;
+  const card = await Card.findByIdAndUpdate(cardId, {name: name});
+  //card sends back the query results, not the updated card document.
+  res.status(200).send(card);
+}
+
+exports.updateCardDescription = async function (req, res) {
+  const { cardId, description } = req.body;
+  const card = await Card.findByIdAndUpdate(cardId, {description: description});
+  //card sends back the query results, not the updated card document.
+  res.status(200).send(card);
+}

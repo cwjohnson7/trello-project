@@ -27,16 +27,15 @@ module.exports = function(app) {
   //create a new list on a specific board
   app.post('/api/addList', requireAuth, List.addList)
   // app.post('/api/moveList', List.moveList)
-  //get the selected board's list based on the board's _id using findById... it should show all the lists on that Board not archived
-  // app.get('/api/getBoardLists', List.getBoardLists)
+
 
   // add/move/remove a card 
   app.post('/api/addCard', requireAuth, Card.addCard)
   app.post('/api/addComment', requireAuth, Comment.addComment)
   app.post('/api/addActivity', requireAuth, Activity.addActivity)
   app.post('/api/moveCard', requireAuth, Card.moveCard)
+  app.post('/api/updateCardName', requireAuth, Card.updateCardName)
+  app.post('/api/updateCardDescription', requireAuth, Card.updateCardDescription)
   app.post('/api/removeCard', requireAuth, Card.removeCard)
 
-  //get the card detail for one card on a specific list
-  // app.get('/cards/:card')
 }

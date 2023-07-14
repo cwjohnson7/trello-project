@@ -1,12 +1,14 @@
 import { Container, Row, Col }from "react-bootstrap";
 import styled from "styled-components";
-import { NavLink, Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Fragment } from "react";
 import { signout } from "../actions";
+
 import { signOutHomeScreenSlice } from "../features/homeScreen/HomeScreenSlice";
 import { useEffect } from "react";
 import { fetchUser } from "../actions";
+
 
 // Using React-Bootstrap and style-components. 
 // I will try to style more as the project goes on. 
@@ -34,11 +36,11 @@ const Header = () => {
     if (authenticated) {
       return (
         <Fragment>
-          <Col md={2} style={{ width: "fit-content" }}>
+          <Col md={6}>
             <UserEmailDiv>{email}</UserEmailDiv>
           </Col>
-          <Col>
-          <SignOutDiv onClick={handleSignOutClick}>Sign Out</SignOutDiv>
+          <Col md={2}>
+            <SignOutDiv onClick={handleSignOutClick}>Sign Out</SignOutDiv>
           </Col>
         </Fragment>
       );
@@ -51,7 +53,7 @@ const Header = () => {
     <NavContainer>
       <Container fluid>
         <Row className="align-items-center">
-          <Col md={{ span: 6, offset: 1 }}>
+          <Col md={{ span: 3, offset: 1 }}>
             <h1 className="display-3"><strong>Trello Jr</strong></h1>
           </Col>
           {renderLinks()}
@@ -76,10 +78,11 @@ const NavContainer = styled.div`
 
 const UserEmailDiv = styled.div`
   font-size: 30px;
+  text-align: center;
 `;
 
 const SignOutDiv = styled.div`
-  font-size: 25px;
+  font-size: 30px;
   &:hover {
     text-decoration: underline;
   }

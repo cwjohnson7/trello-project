@@ -43,6 +43,31 @@ export const addCommentThunk = createThunk(
   "POST"
 );
 
+// double check once all the code is brought together
+export const updateListNameThunk = createThunk(
+  "homeScreen/updateListNameThunk",
+  "/api/updateListName",
+  "POST"
+);
+
+export const updateCardNameThunk = createThunk(
+  "homeScreen/updateCardNameThunk",
+  "/api/updateCardName",
+  "POST"
+);
+
+export const updateCardDescriptionThunk = createThunk(
+  "homeScreen/updateCardDescriptionThunk",
+  "/api/updateCardDescription",
+  "POST"
+);
+
+export const updateCardLabelThunk = createThunk(
+  "homeScreen/updateCardLabelThunk",
+  "/api/updateCardLabel",
+  "POST"
+);
+
 export const homeScreenSlice = createSlice({
   name: "homeScreen",
   initialState,
@@ -113,6 +138,8 @@ export const homeScreenSlice = createSlice({
       list.cards.push({
         _id: action.payload._id,
         name: action.payload.inputValue,
+        comments: [],
+        activities: []
       });
     },
 
@@ -171,6 +198,90 @@ export const homeScreenSlice = createSlice({
         text: action.payload.inputValue,
       })
     },
+
+    updateListName: (state, action) => {
+      // find board
+      const board = state.boards.find(
+        (board) => board._id === action.payload.boardId
+      );
+      if (!board) return;
+
+      // find list
+      const list = board.lists.find(
+        (list) => list._id === action.payload.listId
+      );
+      if (!list) return;
+
+      // replace list name with newly submitted name
+      list.name = action.payload.updatedListName;
+    },
+
+    updateCardName: (state, action) => {
+      // find board
+      const board = state.boards.find(
+        (board) => board._id === action.payload.boardId
+      );
+      if (!board) return;
+
+      // find list
+      const list = board.lists.find(
+        (list) => list._id === action.payload.listId
+      );
+      if (!list) return;
+
+      // find card
+      const card = list.cards.find(
+        (card) => card._id === action.payload.cardId
+      );
+
+      // replace card name with newly submitted name
+      card.name = action.payload.updatedCardName;
+    },
+
+    updateCardDescription: (state, action) => {
+      // find board
+      const board = state.boards.find(
+        (board) => board._id === action.payload.boardId
+      );
+      if (!board) return;
+
+      // find list
+      const list = board.lists.find(
+        (list) => list._id === action.payload.listId
+      );
+      if (!list) return;
+
+      // find card
+      const card = list.cards.find(
+        (card) => card._id === action.payload.cardId
+      );
+
+      // replace card name with newly submitted name
+      card.description = action.payload.updatedDescription;
+    },
+
+    updateCardLabel: (state, action) => {
+      // find board
+      const board = state.boards.find(
+        (board) => board._id === action.payload.boardId
+      );
+      if (!board) return;
+
+      // find list
+      const list = board.lists.find(
+        (list) => list._id === action.payload.listId
+      );
+      if (!list) return;
+
+      // find card
+      const card = list.cards.find(
+        (card) => card._id === action.payload.cardId
+      );
+
+      // replace card name with newly submitted name
+      card.label = action.payload.updatedCardLabel;
+    },
+
   },
   extraReducers: (builder) => {
     builder
@@ -314,8 +425,13 @@ export const homeScreenSlice = createSlice({
   },
 });
 
-export const { moveCard, moveCardWithinList, addCard, addList, addBoard, addComment, signOutHomeScreenSlice } =
-  homeScreenSlice.actions;
+//const { sourceListId, targetListId, cardId } = req.body;
 
+export const { moveCard, moveCardWithinList, addCard, addList, addBoard, addComment, updateListName, updateCardName, updateCardDescription, updateCardLabel, signOutHomeScreenSlice } = homeScreenSlice.actions;
 export default homeScreenSlice.reducer;
+
+// following section is dedicated to memoised selector functions returned by "reselect" library
+
+// define input selectors for listDataSelector used inside List.js
+
 

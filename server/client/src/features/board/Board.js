@@ -11,10 +11,11 @@ const Board = () => {
   const location = useLocation();
   const path = matchPath("/boards/:boardId", location.pathname);
   const pathId = path.params.boardId;
-  const board = boards.find(obj => obj._id === pathId);
+  const board = boards.find(board => board._id === pathId);
+  
 
   const handleBoardButtonClick = () => {
-    navigate("/")
+    navigate("/boards")
   };
 
   // I set this code up because when a new board is created there is no List array. A list array needs to be added at somepoint. 

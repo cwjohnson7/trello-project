@@ -12,6 +12,17 @@
   min-height: 18px;
 }
 
+.cardName {
+  width: fit-content;
+}
+
+.cardLabel {
+  margin-top: 5.6px;
+  width: 30%;
+  height: 50%;
+  border-radius: 5px;
+}
+
 .addComment {
   background-color: rgba(173, 200, 210, 0.5);
   height: 35px;

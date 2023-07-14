@@ -29,26 +29,6 @@ const AddItem = ({ title, boardId, listId, orgId, cardId }) => {
     setErrorMessage(null); 
   };
 
-
- // Move CSS assignment here:
- let InputSelectorCSS = '';
- let AddButtonCSS = '';
-
- switch (title) {
-   case 'Card':
-     InputSelectorCSS = styleAddCard.addCardForm;
-     AddButtonCSS = styleAddCard.addCard;
-     break;
-   case 'List':
-     // Assign appropriate classes for List
-     break;
-   case 'Board':
-     // Assign appropriate classes for Board
-     break;
-   default:
-     console.log('No card title is passed into client/features/list/List.js!');
- }
-
  const handleSubmitClick = () => {
   if (inputValue.trim() !== '') {
     const _id = generateId(5);

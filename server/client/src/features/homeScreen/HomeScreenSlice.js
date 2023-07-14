@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import createThunk from "../utilities/createThunk";
-const apiBaseURL = process.env.REACT_APP_API_URL;
+// const API_URL = process.env.REACT_APP_API_URL;
 
 const initialState = {
   boards: []
@@ -9,68 +9,68 @@ const initialState = {
 // requests to add card in DB and replaces redux card's tempId with DB card._id
 export const getUserBoardsThunk = createThunk(
   "homeScreen/getUserBoardsThunk",
-  `${apiBaseURL}/api/getUserBoards`,
+  `/api/getUserBoards`,
   "GET"
 )
 
 export const addCardThunk = createThunk(
   "homeScreen/addCardThunk",
-  `${apiBaseURL}/api/addCard`,
+  `/api/addCard`,
   "POST"
 );
 
 export const moveCardThunk = createThunk(
   "homeScreen/moveCardThunk",
-  `${apiBaseURL}/api/moveCard`,
+  `/api/moveCard`,
   "POST"
 );
 
 export const addListThunk = createThunk(
   "homeScreen/addListThunk",
-  `${apiBaseURL}/api/addList`,
+  `/api/addList`,
   "POST"
 );
 
 export const addBoardThunk = createThunk(
   "homeScreen/addBoardThunk",
-  `${apiBaseURL}/api/addBoard`,
+  `/api/addBoard`,
   "POST"
 );
 
 export const addCommentThunk = createThunk(
   "homeScreen/addCommentThunk",
-  `${apiBaseURL}/api/addComment`,
+  `/api/addComment`,
   "POST"
 );
 
 // double check once all the code is brought together
 export const updateListNameThunk = createThunk(
   "homeScreen/updateListNameThunk",
-  `${apiBaseURL}/api/updateListName`,
+  `/api/updateListName`,
   "POST"
 );
 
 export const updateCardNameThunk = createThunk(
   "homeScreen/updateCardNameThunk",
-  `${apiBaseURL}/api/updateCardName`,
+  `/api/updateCardName`,
   "POST"
 );
 
 export const updateCardDescriptionThunk = createThunk(
   "homeScreen/updateCardDescriptionThunk",
-  `${apiBaseURL}/api/updateCardDescription`,
+  `/api/updateCardDescription`,
   "POST"
 );
 
 export const updateCardLabelThunk = createThunk(
   "homeScreen/updateCardLabelThunk",
-  `${apiBaseURL}/api/updateCardLabel`,
+  `/api/updateCardLabel`,
   "POST"
 );
 
 export const removeCardThunk = createThunk(
   "homeScreen/removeCardThunk",
-  `${apiBaseURL}/api/removeCard`,
+  `/api/removeCard`,
   "POST"
 );
 
@@ -410,42 +410,42 @@ export const homeScreenSlice = createSlice({
         state.status = "rejected";
         state.error = action.payload;
       })
-      // .addCase(addCommentThunk.pending, (state) => {
-      //   state.status = "loading";
-      //   state.error = null;
-      // })
-      // .addCase(addCommentThunk.fulfilled, (state, action) => {
-      //   state.status = "fulfilled";
-      //   state.error = null;
-      //   // find board
-      //   const board = state.boards.find(
-      //     (board) => board._id === action.payload.boardId
-      //   );
-      //   if (!board) return;
+      .addCase(addCommentThunk.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(addCommentThunk.fulfilled, (state, action) => {
+        state.status = "fulfilled";
+        state.error = null;
+        // find board
+        const board = state.boards.find(
+          (board) => board._id === action.payload.boardId
+        );
+        if (!board) return;
 
-      //   // find list in the board
-      //   const list = board.lists.find(
-      //     (list) => list._id === action.payload.listId
-      //   );
-      //   if (!list) return;
-      //   // find card in the list
-      //   const card = list.cards.find(
-      //     (card) => card._id === action.payload.cardId
-      //   );
-      //   if (!card) return;
+        // find list in the board
+        const list = board.lists.find(
+          (list) => list._id === action.payload.listId
+        );
+        if (!list) return;
+        // find card in the list
+        const card = list.cards.find(
+          (card) => card._id === action.payload.cardId
+        );
+        if (!card) return;
 
-      //   // find comment in the list by its temp Id
-      //   const comment = card.comments.find(
-      //     (comment) => comment._id === action.payload.tempId
-      //   );
+        // find comment in the list by its temp Id
+        const comment = card.comments.find(
+          (comment) => comment._id === action.payload.tempId
+        );
         
-      //   // update comment's _id with the new _id from the payload
-      //   comment._id = action.payload.comment._id;
-      // })
-      // .addCase(addCommentThunk.rejected, (state, action) => {
-      //   state.status = "rejected";
-      //   state.error = action.payload;
-      // })
+        // update comment's _id with the new _id from the payload
+        comment._id = action.payload.comment._id;
+      })
+      .addCase(addCommentThunk.rejected, (state, action) => {
+        state.status = "rejected";
+        state.error = action.payload;
+      })
   },
 });
 

@@ -80,9 +80,10 @@ exports.removeCard = async function(req, res, next) {
   const removedCard = await Card.findById(cardId);
   const list = await List.findById(removedCard.list);
   removedCard.archived = true;
-  removedCard.save();
+  await removedCard.save();
   const cardIndex = list.cards.indexOf(cardId);
-  list.cards.splice(cardIndex, 1)
+  list.cards.splice(cardIndex, 1);
+  await list.save()
 
   res.status(200).send({ removedCard, list }) 
 }

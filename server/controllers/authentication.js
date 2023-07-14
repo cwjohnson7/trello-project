@@ -70,7 +70,6 @@ exports.signUp = function (req, res, next) {
           res.json({ token: tokenForUser(user) })
         });
         console.log("NewOrg: ", newOrg);
-        // res.send({user, boards})
       } else {
         const user = new User({
         email: req.body.email,

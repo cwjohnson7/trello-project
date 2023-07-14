@@ -30,10 +30,14 @@ exports.signIn = async function(req, res, next) {
   })
 }
 
-exports.currentUser = function(req, res) {
+exports.currentUser = async function(req, res) {
+
+  const id = req.user.org
+  const orgName = await Organization.findById(id)
   const user = {
     email: req.user.email,
     token: tokenForUser(req.user),
+    orgName: orgName.name
   };
 
   res.send(user)
@@ -67,7 +71,8 @@ exports.signUp = function (req, res, next) {
           email: req.body.email,
           firstName: req.body.firstName,
           lastName: req.body.lastName,
-          org: newOrg._id
+          org: newOrg._id,
+          org: newOrg.name
         });
         user.setPassword(password);
         user.save().then(() => {
@@ -80,6 +85,7 @@ exports.signUp = function (req, res, next) {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         org: existingOrg._id,
+        orgName: existingOrg.name
         });
         user.setPassword(password);
         user.save().then(() => {

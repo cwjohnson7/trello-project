@@ -71,12 +71,12 @@ exports.signUp = function (req, res, next) {
           email: req.body.email,
           firstName: req.body.firstName,
           lastName: req.body.lastName,
-          org: newOrg._id,
-          org: newOrg.name
+          org: newOrg._id
         });
+        const orgName = newOrg.name;
         user.setPassword(password);
         user.save().then(() => {
-          res.json({ token: tokenForUser(user) })
+          res.json({ token: tokenForUser(user), user, orgName } )
         });
         console.log("NewOrg: ", newOrg);
       } else {
@@ -84,12 +84,12 @@ exports.signUp = function (req, res, next) {
         email: req.body.email,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
-        org: existingOrg._id,
-        orgName: existingOrg.name
+        org: existingOrg._id
         });
+        const orgName = existingOrg.name;
         user.setPassword(password);
         user.save().then(() => {
-          res.json({ token: tokenForUser(user), user })
+          res.json({ token: tokenForUser(user), user, orgName})
         })
       };
     });

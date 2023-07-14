@@ -138,6 +138,8 @@ export const homeScreenSlice = createSlice({
       list.cards.push({
         _id: action.payload._id,
         name: action.payload.inputValue,
+        comments: [],
+        activities: []
       });
     },
 
@@ -166,6 +168,7 @@ export const homeScreenSlice = createSlice({
         _id: action.payload._id,
         org: action.payload.org,
         title: action.payload.inputValue,
+        lists: [],
       });
     },
 

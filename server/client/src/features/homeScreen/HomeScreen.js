@@ -12,7 +12,8 @@ const HomeScreen = () => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.authenticated );
   const boards = useSelector((state) => state.homeScreen.boards);
-  const org  = useSelector((state) => state.auth.org);
+  const orgId  = useSelector((state) => state.auth.org);
+  const orgName = useSelector((state) => state.auth.orgName);
 
   const navigate = useNavigate();
 
@@ -31,7 +32,7 @@ const HomeScreen = () => {
   return(
     <div className={styles.homeScreen}>
       <Container>
-        <h2>  Workspace id: {org} </h2>
+        <h2>{orgName} Workspace</h2>
         <hr />
 
         <Row>
@@ -48,7 +49,7 @@ const HomeScreen = () => {
              
         </Row>
         
-        <AddItem title="Board" orgId={org} />
+        <AddItem title="Board" orgId={orgId} />
         
       </Container>
     </div>

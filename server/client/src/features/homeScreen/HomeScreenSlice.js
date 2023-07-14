@@ -46,25 +46,31 @@ export const addCommentThunk = createThunk(
 // double check once all the code is brought together
 export const updateListNameThunk = createThunk(
   "homeScreen/updateListNameThunk",
-  "/api/updateListName",
+  `${apiBaseURL}/api/updateListName`,
   "POST"
 );
 
 export const updateCardNameThunk = createThunk(
   "homeScreen/updateCardNameThunk",
-  "/api/updateCardName",
+  `${apiBaseURL}/api/updateCardName`,
   "POST"
 );
 
 export const updateCardDescriptionThunk = createThunk(
   "homeScreen/updateCardDescriptionThunk",
-  "/api/updateCardDescription",
+  `${apiBaseURL}/api/updateCardDescription`,
   "POST"
 );
 
 export const updateCardLabelThunk = createThunk(
   "homeScreen/updateCardLabelThunk",
-  "/api/updateCardLabel",
+  `${apiBaseURL}/api/updateCardLabel`,
+  "POST"
+);
+
+export const removeCardThunk = createThunk(
+  "homeScreen/removeCardThunk",
+  `${apiBaseURL}/api/removeCard`,
   "POST"
 );
 
@@ -282,6 +288,22 @@ export const homeScreenSlice = createSlice({
       card.label = action.payload.updatedCardLabel;
     },
 
+    removeCard: (state, action) => {
+      // find board
+      const board = state.boards.find(
+        (board) => board._id === action.payload.boardId
+      );
+
+      // find list
+      const list = board.lists.find(
+        (list) => list._id === action.payload.listId
+      );
+
+      // get index of card and splice to remove
+      const cardIndex = list.cards.indexOf(action.payload.cardId);
+      list.cards.splice(cardIndex, 1);
+    }
+
   },
   extraReducers: (builder) => {
     builder
@@ -386,48 +408,48 @@ export const homeScreenSlice = createSlice({
         state.status = "rejected";
         state.error = action.payload;
       })
-      .addCase(addCommentThunk.pending, (state) => {
-        state.status = "loading";
-        state.error = null;
-      })
-      .addCase(addCommentThunk.fulfilled, (state, action) => {
-        state.status = "fulfilled";
-        state.error = null;
-        // find board
-        const board = state.boards.find(
-          (board) => board._id === action.payload.boardId
-        );
-        if (!board) return;
+      // .addCase(addCommentThunk.pending, (state) => {
+      //   state.status = "loading";
+      //   state.error = null;
+      // })
+      // .addCase(addCommentThunk.fulfilled, (state, action) => {
+      //   state.status = "fulfilled";
+      //   state.error = null;
+      //   // find board
+      //   const board = state.boards.find(
+      //     (board) => board._id === action.payload.boardId
+      //   );
+      //   if (!board) return;
 
-        // find list in the board
-        const list = board.lists.find(
-          (list) => list._id === action.payload.listId
-        );
-        if (!list) return;
-        // find card in the list
-        const card = list.cards.find(
-          (card) => card._id === action.payload.cardId
-        );
-        if (!card) return;
+      //   // find list in the board
+      //   const list = board.lists.find(
+      //     (list) => list._id === action.payload.listId
+      //   );
+      //   if (!list) return;
+      //   // find card in the list
+      //   const card = list.cards.find(
+      //     (card) => card._id === action.payload.cardId
+      //   );
+      //   if (!card) return;
 
-        // find comment in the list by its temp Id
-        const comment = card.comments.find(
-          (comment) => comment._id === action.payload.tempId
-        );
+      //   // find comment in the list by its temp Id
+      //   const comment = card.comments.find(
+      //     (comment) => comment._id === action.payload.tempId
+      //   );
         
-        // update comment's _id with the new _id from the payload
-        comment._id = action.payload.comment._id;
-      })
-      .addCase(addCommentThunk.rejected, (state, action) => {
-        state.status = "rejected";
-        state.error = action.payload;
-      })
+      //   // update comment's _id with the new _id from the payload
+      //   comment._id = action.payload.comment._id;
+      // })
+      // .addCase(addCommentThunk.rejected, (state, action) => {
+      //   state.status = "rejected";
+      //   state.error = action.payload;
+      // })
   },
 });
 
 //const { sourceListId, targetListId, cardId } = req.body;
 
-export const { moveCard, moveCardWithinList, addCard, addList, addBoard, addComment, updateListName, updateCardName, updateCardDescription, updateCardLabel, signOutHomeScreenSlice } = homeScreenSlice.actions;
+export const { moveCard, moveCardWithinList, addCard, addList, addBoard, addComment, updateListName, updateCardName, updateCardDescription, updateCardLabel, signOutHomeScreenSlice, removeCard } = homeScreenSlice.actions;
 export default homeScreenSlice.reducer;
 
 // following section is dedicated to memoised selector functions returned by "reselect" library

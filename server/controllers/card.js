@@ -34,6 +34,8 @@ exports.moveCard = async function(req, res, next) {
   // ---  req.body.sourceList/targetList looks like this:[{cardId, index}, {cardId, index}]
   const { cardId, sourceListId, targetListId, sourceList, targetList } = req.body;
 
+
+
   if (!targetListId || !targetList) {
     const sourceListResult = await List.findById(sourceListId);
     console.log('sourceListResult before moving WITHIN list: ', sourceListResult);
@@ -78,6 +80,7 @@ exports.removeCard = async function(req, res, next) {
   const removedCard = await Card.findById(cardId);
   const list = await List.findById(removedCard.list);
   removedCard.archived = true;
+  removedCard.save();
   const cardIndex = list.cards.indexOf(cardId);
   list.cards.splice(cardIndex, 1)
 
@@ -94,6 +97,13 @@ exports.updateCardName = async function (req, res) {
 exports.updateCardDescription = async function (req, res) {
   const { cardId, description } = req.body;
   const card = await Card.findByIdAndUpdate(cardId, {description: description});
+  //card sends back the query results, not the updated card document.
+  res.status(200).send(card);
+}
+
+exports.updateCardLabel = async function (req, res) {
+  const { cardId, label } = req.body;
+  const card = await Card.findByIdAndUpdate(cardId, {label: label});
   //card sends back the query results, not the updated card document.
   res.status(200).send(card);
 }

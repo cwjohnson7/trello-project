@@ -26,5 +26,9 @@ exports.addList = function (req, res, next) {
 
 // }
 
-// exports.getBoardLists = function (req, res, next) {
-// }
+exports.updateListName = async function (req, res) {
+  const { listId, name } = req.body;
+  const list = await List.findByIdAndUpdate(listId, {name: name});
+  //card sends back the query results, not the updated card document.
+  res.status(200).send(list);
+}

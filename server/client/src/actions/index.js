@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AUTH_USER, AUTH_ERROR } from "./types";
+import { AUTH_USER, AUTH_ERROR, SIGN_OUT } from "./types";
 
 export const signup = (formProps, callback) => dispatch => {
   axios.post(
@@ -51,6 +51,6 @@ export const fetchUser = () => dispatch => {
 export const signout = (callback) => dispatch => {
   localStorage.removeItem("token");
 
-  dispatch({ type: AUTH_USER, payload: "" });
+  dispatch({ type: SIGN_OUT });
   callback();
 };

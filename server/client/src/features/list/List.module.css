@@ -49,3 +49,13 @@
   border-radius: 5px;
   border: 0;
 }
+
+.list {
+  background: #adc8d2;
+  width: 275px;
+  height: fit-content;
+  margin: 10px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}

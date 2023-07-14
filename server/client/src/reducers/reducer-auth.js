@@ -1,18 +1,32 @@
-import { AUTH_USER, AUTH_ERROR } from "../actions/types";
+import { AUTH_USER, AUTH_ERROR,  SIGN_OUT } from "../actions/types";
 
 const INITIAL_STATE = {
   authenticated: localStorage.getItem("token") || "",
   errorMessage: "",
   email: null,
+  firstName: null,
+  lastName: null,
+  org: null
 };
 
-const AuthReducer = (state= INITIAL_STATE, action) => {
+const AuthReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case AUTH_USER:
       return { ...state, 
         authenticated: action.payload.token,
-        email: action.payload.email || null,
+        email: action.payload.user.email,
+        firstName: action.payload.user.firstName,
+        lastName: action.payload.user.lastName,
+        org: action.payload.user.org
       };
+    case SIGN_OUT:
+        return { ...state, 
+          authenticated: "", 
+          email: null, 
+          firstName: null, 
+          lastName: null, 
+          org: null 
+        };
     case AUTH_ERROR:
       return { ...state, errorMessage: action.payload };
     default:

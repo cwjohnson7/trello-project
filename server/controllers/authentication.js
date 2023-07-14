@@ -19,8 +19,10 @@ exports.addOrg = function (req, res) {
 };
 
 exports.signIn = function(req, res, next) {
+  const user = req.user;
   res.send({
-    token: tokenForUser(req.user)
+    token: tokenForUser(user),
+    user: user
   })
 }
 
@@ -47,7 +49,6 @@ exports.signUp = function (req, res, next) {
     if (err) {
       return next(err);
     }
-
     // If a user with email does exist, return an error
     if (result) {
       return res.status(422).send({ error: "Email is in use" });
@@ -69,7 +70,6 @@ exports.signUp = function (req, res, next) {
           res.json({ token: tokenForUser(user) })
         });
         console.log("NewOrg: ", newOrg);
-        // res.send({user, boards})
       } else {
         const user = new User({
         email: req.body.email,
@@ -79,11 +79,9 @@ exports.signUp = function (req, res, next) {
         });
         user.setPassword(password);
         user.save().then(() => {
-          res.json({ token: tokenForUser(user) })
+          res.json({ token: tokenForUser(user), user })
         })
       };
-
-      // res.send({user, boards});
     });
   });
 };

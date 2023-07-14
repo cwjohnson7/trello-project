@@ -5,6 +5,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { Fragment } from "react";
 import { signout } from "../actions";
 
+import { signOutHomeScreenSlice } from "../features/homeScreen/HomeScreenSlice";
+import { useEffect } from "react";
+import { fetchUser } from "../actions";
+
+
 // Using React-Bootstrap and style-components. 
 // I will try to style more as the project goes on. 
 // I want to get a skeleton built first then get more complex.
@@ -21,6 +26,7 @@ const Header = () => {
   const email = useSelector(state => state.auth.email);
   
   const handleSignOutClick = () => {
+    dispatch(signOutHomeScreenSlice());
     dispatch(signout(() => {
       navigate("/");
     }));

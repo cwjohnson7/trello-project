@@ -6,14 +6,24 @@ import AddItem from "../utilities/AddItem";
 import { useDrop } from "react-dnd";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { moveCard, listDataSelector, moveCardThunk, updateListName, updateListNameThunk } from "../homeScreen/HomeScreenSlice";
+
+import { moveCard, listDataSelector, moveCardWithinList, moveCardThunk, updateListName, updateListNameThunk } from "../homeScreen/HomeScreenSlice";
+
+import {
+  moveCard,
+  ,
+  moveCardThunk,
+} from "../homeScreen/HomeScreenSlice";
+
 
 const List = ({ boardId, listId }) => {
   const dispatch = useDispatch();
   // return cards and name belonging to current list
   const { cards, listName } = useSelector((state) => {
     // find board with the id matching board id prop that is passed to the List via "listId" prop from HomeScreen component
-    const board = state.homeScreen.boards.find((board) => board._id === boardId);
+    const board = state.homeScreen.boards.find(
+      (board) => board._id === boardId
+    );
     if (!board) return { cards: [], name: "" };
 
     const list = board.lists.find((list) => list._id === listId);
@@ -21,34 +31,63 @@ const List = ({ boardId, listId }) => {
 
     return { cards: list.cards, listName: list.name };
   });
-  // // return cards and name belonging to current list
-  // const { cards, listName } = useSelector(state => listDataSelector(state, boardId, listId));
 
   // Make List Droppable and track is List is being dropped (isOver) via monitor funciton of DnD state variable
+
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
     accept: ItemTypes.CARD,
-    canDrop: (item, monitor) => {
-      return item.listId !== listId;
-    },
+
     collect: (monitor) => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),
     }),
     drop: (item, monitor) => {
-      dispatch(
-        moveCard({
-          boardId,
-          sourceListId: item.listId,
-          targetListId: listId,
-          cardId: item.id,
-          cardName: item.name,
-        })
-      );
-      dispatch(moveCardThunk({
-        sourceListId: item.listId,
-        targetListId: listId,
-        cardId: item.id,
-      }))
+      // Check if the hover is happening over the list to prevent index miscalculation
+      if (!monitor.isOver()) {
+        return;
+      }
+
+      let newIndex;
+      const delta = monitor.getDifferenceFromInitialOffset();
+      let moveY = Math.round(delta.y / item.cardHeight);
+      console.log(`moveY is ${moveY}`);
+
+      // The card is being moved within the same list
+      if (item.listId === listId) {
+
+        newIndex = item.index + Math.round(moveY);
+
+        // Ensure the new index stays within the range of 0 to cards.length - 1
+        newIndex = Math.max(0, newIndex);
+        newIndex = Math.min(cards.length - 1, newIndex);
+
+        dispatch(
+          moveCardWithinList({
+            sourceIndex: item.index,
+            targetIndex: newIndex,
+            listId,
+            boardId,
+          })
+        );
+      } else {
+        // card is moved to a different list, add to the end of targetList
+        dispatch(
+          moveCard({
+            boardId,
+            sourceListId: item.listId,
+            targetListId: listId,
+            cardId: item.id,
+          })
+        );
+        dispatch(
+          moveCardThunk({
+            sourceListId: item.listId,
+            targetListId: listId,
+            cardId: item.id,
+          })
+        );
+      }
+
       return { listId: listId }; // Return drop result
     },
   }));
@@ -111,7 +150,6 @@ const List = ({ boardId, listId }) => {
       </div>
     );
   };
-
 
   return (
     <div 

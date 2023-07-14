@@ -1,100 +1,45 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { createSelector } from "reselect";
 import createThunk from "../utilities/createThunk";
+const apiBaseURL = process.env.REACT_APP_API_URL;
 
 const initialState = {
-  user: {
-    _id: "sf24d",
-    firstName: "Yegor",
-    lastName: "Rodin",
-    orgId: '64a720b83b8a0cd93ea4f327',
-    orgName: "Parsity"
-  },
-  boards: [
-    {
-      _id: "089sd",
-      title: "Daily Planner",
-      lists: [
-        {
-          _id: "j2h43",
-          name: "To Do",
-          cards: [
-            { _id: "sdfff",
-              name: "Work Out",
-              description: "I am going to go to the gym",
-              label: "green", 
-              comments: [
-                {
-                  _id: "aqwed",
-                  createdBy: "User",
-                  cardId: "sdfff",
-                  text: "The gym was closed today."
-                },
-                {
-                  _id: "owefn",
-                  createdBy: "User2",
-                  cardId: "sdfff",
-                  text: "Let's go tomorrow then."
-                }
-            ] },
-            { _id: "234dd", name: "Meal Prep" },
-            { _id: "dgdsf", name: "Walk a Dog" },
-            { _id: "gsf32", name: "Practice Coding" },
-          ],
-        },
-        { _id: "34rfc", name: "Doing", cards: [] },
-        { _id: "ok097", name: "Done", cards: [] },
-      ],
-    },
-    {
-      _id: "klm87",
-      title: "Networking",
-      lists: [
-        {
-          _id: "kiji5",
-          name: "To Do",
-          cards: [
-            { _id: "vvbbh", name: "Attend Meetup" },
-            { _id: "9idfd", name: "Follow up with CTO" },
-            { _id: "00233", name: "Post on LinkedIn" },
-            { _id: "vdfv4", name: "Speak at a Conference" },
-          ],
-        },
-        { _id: "sdf34", name: "Doing", cards: [] },
-        { _id: "09fgd", name: "Done", cards: [] },
-      ],
-    },
-  ],
+  boards: []
 };
 
 // requests to add card in DB and replaces redux card's tempId with DB card._id
+export const getUserBoardsThunk = createThunk(
+  "homeScreen/getUserBoardsThunk",
+  `${apiBaseURL}/api/getUserBoards`,
+  "GET"
+)
+
 export const addCardThunk = createThunk(
   "homeScreen/addCardThunk",
-  "/api/addCard",
+  `${apiBaseURL}/api/addCard`,
   "POST"
 );
 
 export const moveCardThunk = createThunk(
   "homeScreen/moveCardThunk",
-  "/api/moveCard",
+  `${apiBaseURL}/api/moveCard`,
   "PUT"
 );
 
 export const addListThunk = createThunk(
   "homeScreen/addListThunk",
-  "/api/addList",
+  `${apiBaseURL}/api/addList`,
   "POST"
 );
 
 export const addBoardThunk = createThunk(
   "homeScreen/addBoardThunk",
-  "/api/addBoard",
+  `${apiBaseURL}/api/addBoard`,
   "POST"
 );
 
 export const addCommentThunk = createThunk(
   "homeScreen/addCommentThunk",
-  "/api/addComment",
+  `${apiBaseURL}/api/addComment`,
   "POST"
 );
 
@@ -127,42 +72,55 @@ export const homeScreenSlice = createSlice({
   name: "homeScreen",
   initialState,
   reducers: {
+    signOutHomeScreenSlice: (state) => {
+      return initialState;
+    },
     moveCard: (state, action) => {
-      // find and remove card from its original list
-      // find board
-      const board = state.boards.find(
-        (board) => board._id === action.payload.boardId
-      );
+      const { boardId, sourceListId, targetListId, cardId } = action.payload;
+
+      const board = state.boards.find((board) => board._id === boardId);
       if (!board) return;
 
-      // find list in the board
-      const list = board.lists.find(
-        (list) => list._id === action.payload.sourceListId
-      );
-      if (!list) return;
-
-      // find index of the card in the list
-      const cardIndex = list.cards.findIndex(
-        (card) => card._id === action.payload.cardId
-      );
-
-      // remove card from the list if found
-      if (cardIndex !== -1) {
-        list.cards.splice(cardIndex, 1);
-      }
+      // find source list
+      const sourceList = board.lists.find((list) => list._id === sourceListId);
+      if (!sourceList) return;
 
       // find target list
-      const targetList = board.lists.find(
-        (list) => list._id === action.payload.targetListId
-      );
+      const targetList = board.lists.find((list) => list._id === targetListId);
       if (!targetList) return;
 
+      // find the moved card in the source list
+      const movedCard = sourceList.cards.find((card) => card._id === cardId);
+      if (!movedCard) return;
+
+      // remove the moved card from the source list
+      sourceList.cards = sourceList.cards.filter((card) => card._id !== cardId);
+
       // add card to target list
-      targetList.cards.push({
-        _id: action.payload.cardId,
-        name: action.payload.cardName,
-        // other card properties...
-      });
+      targetList.cards.push(movedCard);
+
+      return state;
+    },
+
+    moveCardWithinList: (state, action) => {
+      const { sourceIndex, targetIndex, listId, boardId } = action.payload;
+    
+      // find board
+      const board = state.boards.find((board) => board._id === boardId);
+      if (!board) return;
+    
+      // find list
+      const list = board.lists.find((list) => list._id === listId);
+      if (!list) return;
+    
+      // pull out the card from the source position
+      const [movedCard] = list.cards.splice(sourceIndex, 1);
+      if (!movedCard) return;
+    
+      // insert the moved card at the target position
+      list.cards = [...list.cards.slice(0, targetIndex), movedCard, ...list.cards.slice(targetIndex)];
+    
+      return state;
     },
 
     addCard: (state, action) => {
@@ -188,11 +146,13 @@ export const homeScreenSlice = createSlice({
       const board = state.boards.find(
         (board) => board._id === action.payload.boardId
       );
+      console.log(`below is redux board from addList reducer:`)
+      console.log(board);
       if (!board) {
-        console.log('no board found inside addList reducer!');
+        console.log("no board found inside addList reducer!");
         return;
       }
-      
+
       // add list to board
       board.lists.push({
         _id: action.payload._id,
@@ -322,6 +282,19 @@ export const homeScreenSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(getUserBoardsThunk.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(getUserBoardsThunk.fulfilled, (state, action) => {
+        state.boards = action.payload.boards;
+        state.status = "fulfilled";
+        state.error = null;
+      })
+      .addCase(getUserBoardsThunk.rejected, (state, action) => {
+        state.status = "rejected";
+        state.error = action.payload;
+      })
       .addCase(addCardThunk.pending, (state) => {
         state.status = "loading";
         state.error = null;
@@ -375,7 +348,7 @@ export const homeScreenSlice = createSlice({
         // update list._id from temp to DB id
         // find board
         const board = state.boards.find(
-          (board) => board._id === action.payload.boardId
+          (board) => board._id === action.payload.list.board
         );
         if (!board) return;
 
@@ -396,13 +369,15 @@ export const homeScreenSlice = createSlice({
         state.error = null;
       })
       .addCase(addBoardThunk.fulfilled, (state, action) => {
+        console.log(action.payload);
+        const {tempId, board } = action.payload;
         state.status = "fulfilled";
         state.error = null;
         // update board._id from temp to DB id
-        const board = state.boards.find(
-          (board) => board._id === action.payload.tempId
+        const boardRedux = state.boards.find(
+          (board) => board._id === tempId
         );
-        board._id = action.payload.board._id;
+        boardRedux._id = board._id;
       })
       .addCase(addBoardThunk.rejected, (state, action) => {
         state.status = "rejected";
@@ -446,42 +421,14 @@ export const homeScreenSlice = createSlice({
       })
   },
 });
+
 //const { sourceListId, targetListId, cardId } = req.body;
 
-export const { moveCard, addCard, addList, addBoard, addComment, updateListName, updateCardName, updateCardDescription, updateCardLabel } = homeScreenSlice.actions;
+export const { moveCard, moveCardWithinList, addCard, addList, addBoard, addComment, updateListName, updateCardName, updateCardDescription, updateCardLabel, signOutHomeScreenSlice } = homeScreenSlice.actions;
 export default homeScreenSlice.reducer;
 
 // following section is dedicated to memoised selector functions returned by "reselect" library
 
 // define input selectors for listDataSelector used inside List.js
 
-const getBoards = (state) => state.homeScreen.boards;
-// following two input selectors use props passed to List component from Board component
-const getBoardId = (_, boardId) => boardId;
-const getListId = (_, listId) => listId;
 
-export const listDataSelector = createSelector(
-  getBoards,
-  getBoardId,
-  getListId,
-  (boards, boardId, listId) => {
-    console.log(`boards below`);
-    console.log(boards);
-
-    console.log(`boardId below`);
-    console.log(boardId);
-
-    console.log(`listId below`);
-    console.log(listId);
-
-    const board = boards.find((board) => board._id === boardId);
-    // console.log('Found board:', board);
-    if (!board) return { cards: [], name: "" };
-
-    const list = board.lists.find((list) => list._id === listId);
-    // console.log('Found list:', list);
-    if (!list) return { cards: [], name: "" };
-
-    return { cards: list.cards, listName: list.name };
-  }
-);

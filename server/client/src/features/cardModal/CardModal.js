@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Modal, Button, Container, Row, Col, Form } from "react-bootstrap";
 import AddItem from "../utilities/AddItem";
 import Comment from "../comment/Comment";  
 import styles from "./CardModal.module.css";
+import { updateCardName, updateCardNameThunk, updateCardDescription, updateCardDescriptionThunk, updateCardLabel, updateCardLabelThunk } from "../homeScreen/HomeScreenSlice";
 
 
 const CardModal = ({ cardId, listId, boardId, visible, onClose }) => {
@@ -12,14 +13,65 @@ const CardModal = ({ cardId, listId, boardId, visible, onClose }) => {
   const list = board.lists.find(list => list._id === listId);
   const card = list.cards.find(card => card._id === cardId);
 
+  const dispatch = useDispatch();
+
+  // Render and Edit Card Title
+  const [cardNameEditing, setCardNameEditing] = useState(false);
+  const handleCardNameClick = () => setCardNameEditing(true);
+
+  // created local state to work with onChange attribute of input
+  const [updatedCardName, setUpdatedCardName] = useState(card.name);
+
+  // handleCardNameChange for dispatching
+  const handleCardNameChange = () => {
+    dispatch(updateCardName({ boardId, listId, cardId, updatedCardName }));
+    dispatch(updateCardNameThunk({ name: updatedCardName, boardId, listId, cardId }));
+
+    setCardNameEditing(false);
+  };
+
+  // handling the dispatch if the Enter key is pressed. 
+  const handleEnter = (e) => {
+    e.preventDefault();
+
+    if (e.key === "Enter") {
+      handleCardNameChange();
+    }
+  };
+
+  // autoFocus, onFocus, and handleFocus make sure the input is focused on when clicked and the text inside the input is highlighted
+  const handleFocus = (e) => {
+    e.currentTarget.select();
+  };
+
+  // onBlur in the input will invoke handleCardNameChange directly and happens when the focused input is clicked out of
+
+  // render card name of edit list name by clicking
+  const renderCardName = () => {
+    return cardNameEditing ? (
+
+      <div >
+        <input onChange={e => setUpdatedCardName(e.target.value)} className={styles.editCardName} value={updatedCardName} onKeyUp={handleEnter} onFocus={handleFocus} autoFocus onBlur={handleCardNameChange}/>
+      </div>
+    ) : (
+      <Modal.Title onClick={handleCardNameClick} style={{ cursor: "pointer" }}>{card.name}</Modal.Title>
+    )
+  }  
+
+  
   // Code to handle editing of description textarea in card modal
   const [descriptionEditing, setDescriptionEditing] = useState(false);
   const handleDescriptionClick = () => setDescriptionEditing(true);
   const handleDecriptionClose = () => setDescriptionEditing(false);
+
+  // created local state to work with onChange attribute of input
+  const [updatedDescription, setUpdatedDescription] = useState(card.description);
   
   // function for adding description to state
-  const handleDescriptionSaveClick = () => {
+  const handleDescriptionSave = () => {
     // code to add to state
+    dispatch(updateCardDescription({ boardId, listId, cardId, updatedDescription }));
+    dispatch(updateCardDescriptionThunk({ boardId, listId, cardId, description: updatedDescription }));
 
     setDescriptionEditing(false);
   };
@@ -30,23 +82,40 @@ const CardModal = ({ cardId, listId, boardId, visible, onClose }) => {
     return descriptionEditing ? (
       <Form>
         <Form.Group className="mb-3">
-          <Form.Control as="textarea" rows={3} placeholder="Add description here" />
-          <Button variant="primary" onClick={handleDescriptionSaveClick}>Save Changes</Button>
+          <Form.Control 
+            as="textarea" 
+            rows={3} 
+            placeholder={updatedDescription ? updatedDescription : "Add description here"} 
+            value={updatedDescription}
+            onChange={e => setUpdatedDescription(e.target.value)}
+            autoFocus
+            />
+          <Button variant="primary" onClick={handleDescriptionSave}>Save Changes</Button>
           <Button variant="secondary" className="ms-1" onClick={handleDecriptionClose}>Close</Button>
         </Form.Group>
       </Form>
     ) : (
-      <div onClick={handleDescriptionClick}>{card.description}</div>
+      <div onClick={handleDescriptionClick}>{card.description ? card.description : "Add description here"}</div>
     )
   };
 
+  // handling card label change
+  let updatedCardLabel = card.label;
+  
+  const handleCardLabelChange = (e) => {
+    updatedCardLabel = e.target.value;
+
+    dispatch(updateCardLabel({ boardId, listId, cardId, updatedCardLabel }));
+    dispatch(updateCardLabelThunk({ boardId, listId, cardId, label: updatedCardLabel}));    
+  };
+ 
   return (
     <div>
       <Modal size="lg" show={visible} onHide={onClose}>
         <Modal.Header closeButton>
 
           {/* Card Title in modal */}
-          <Modal.Title>{card.name}</Modal.Title>
+          {renderCardName()}
 
           {/* Card Label in modal */}
           <div className={styles.cardLabel}style={{ backgroundColor: card.label }}></div>
@@ -84,15 +153,18 @@ const CardModal = ({ cardId, listId, boardId, visible, onClose }) => {
 
                 {/* Label Select */}
                 <Modal.Title>Label</Modal.Title>
-                <Form.Select className={styles.selectBtn}>
-                  <option>Label</option>
-                  <option>None</option>
-                  <option>Purple</option>
-                  <option>Blue</option>
-                  <option>Green</option>
-                  <option>Yellow</option>
-                  <option>Orange</option>
-                  <option>Red</option>
+                <Form.Select 
+                  value={updatedCardLabel} 
+                  className={styles.selectBtn}
+                  onChange={handleCardLabelChange}
+                  >
+                  <option value="" >None</option>
+                  <option value="purple" >Purple</option>
+                  <option value="blue" >Blue</option>
+                  <option value="green" >Green</option>
+                  <option value="yellow" >Yellow</option>
+                  <option value="orange" >Orange</option>
+                  <option value="red" >Red</option>
                 </Form.Select>
                 <hr />
 

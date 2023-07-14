@@ -6,11 +6,15 @@ import AddItem from "../utilities/AddItem";
 import { useDrop } from "react-dnd";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
+
+import { moveCard, listDataSelector, moveCardWithinList, moveCardThunk, updateListName, updateListNameThunk } from "../homeScreen/HomeScreenSlice";
+
 import {
   moveCard,
-  moveCardWithinList,
+  ,
   moveCardThunk,
 } from "../homeScreen/HomeScreenSlice";
+
 
 const List = ({ boardId, listId }) => {
   const dispatch = useDispatch();
@@ -89,31 +93,42 @@ const List = ({ boardId, listId }) => {
   }));
 
   // Render and Edit List Title 
-  // Still need to add code to change the value in state and database
   const [isEditing, setIsEditing] = useState(false);
+  const handleListNameClick = () => setIsEditing(true);
 
-  const handleTitleChange = (e) => {
+  // created local state to work with onChange attribute of input
+  // there's probably a better way but this works for now
+  const [updatedListName, setUpdatedListName] = useState(listName);
+
+  // handle ListNameChange for dispatching
+  const handleListNameChange = () => {
+      dispatch(updateListName({ boardId, listId, updatedListName }));
+      dispatch(updateListNameThunk({ name: updatedListName, boardId, listId}));
+
+      setIsEditing(false);
+  };
+
+  // handling the dispatch if the Enter key is pressed. 
+  const handleEnter = (e) => {
     e.preventDefault();
 
     if (e.key === "Enter") {
-      setIsEditing(false);
-    }
-  };
-
-  const handleInitialTitleClick = () => {
-    setIsEditing(true);
+      handleListNameChange();
+    }    
   };
 
   const handleFocus = (e) => {
     e.currentTarget.select();
   };
 
+  // onBlur in the input will invoke handleCardNameChange directly and happens when the focused input is clicked out of
+
   // Render List title and # of cards or edit list title by clicking
-  const renderListTitle = () => {
+  const renderListName = () => {
     return isEditing ? (
 
       <div className={styles.editListTitle}>
-        <input value={listName} onKeyUp={handleTitleChange} onFocus={handleFocus} autoFocus/>
+        <input onChange={e => setUpdatedListName(e.target.value)} value={updatedListName} onKeyUp={handleEnter} onFocus={handleFocus} autoFocus onBlur={handleListNameChange} />
       </div>
 
     ) : (
@@ -121,7 +136,7 @@ const List = ({ boardId, listId }) => {
       <div className="container">
         <div className="row pt-2 pb-2">
 
-          <div onClick={handleInitialTitleClick}  className="col-md-8">
+          <div onClick={handleListNameClick}  className="col-md-8">
             <div className={styles.listTitle}>
               {listName}
             </div>
@@ -142,7 +157,7 @@ const List = ({ boardId, listId }) => {
       ref={drop}
       style={{ backgroundColor: isOver ? "blue" : "#ADC8D2" }}
     >
-      {renderListTitle()}
+      {renderListName()}
       
       {/* {canDrop ? "Release to drop" : "Drag a box here"} */}
       {cards.map((card) => (

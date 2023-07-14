@@ -12,8 +12,7 @@ const HomeScreen = () => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.authenticated );
   const boards = useSelector((state) => state.homeScreen.boards);
-  const orgId  = useSelector((state) => state.auth.org);
-  const orgName = useSelector((state) => state.auth.orgName);
+  const {orgName, org} = useSelector((state) => state.auth);
 
   const navigate = useNavigate();
 
@@ -25,14 +24,11 @@ const HomeScreen = () => {
     dispatch(getUserBoardsThunk({ token }));
   }, [token, dispatch]);
 
-  
-  // function clickHandler() {
-  //   dispatch(getUserBoardsThunk());
-  // }
+
   return(
     <div className={styles.homeScreen}>
       <Container>
-        <h2>{orgName} Workspace</h2>
+        <h2>  Organization: {orgName} </h2>
         <hr />
 
         <Row>
@@ -49,7 +45,7 @@ const HomeScreen = () => {
              
         </Row>
         
-        <AddItem title="Board" orgId={orgId} />
+        <AddItem title="Board" orgId={org} />
         
       </Container>
     </div>

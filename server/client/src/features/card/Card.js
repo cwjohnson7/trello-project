@@ -30,7 +30,7 @@ const Card = ({ id, name, listId, index, boardId }) => {
       setCardHeight(CardContainerRef.current.offsetHeight);
     }
   }, [CardContainerRef.current]);
-
+  
   // FOLLOWING CODE IS USED FOR RDND FUNCTIONALITY
   const item = { id, name, listId, boardId, index, cardHeight };
   // connect Card to monitors state of React Drag and Drop via useDrag hook
@@ -51,7 +51,7 @@ const Card = ({ id, name, listId, index, boardId }) => {
   const handleShowModal = () => setShowModal(!showModal);
 
   return (
-    <div>
+    <div ref={CardContainerRef}>
       {/* Cards displayed in lists */}
       <div 
         className={styles.cardContainer}

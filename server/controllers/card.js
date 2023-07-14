@@ -33,8 +33,8 @@ exports.addCard = function (req, res, next) {
 exports.moveCard = async function(req, res, next) {
   // ---  req.body.sourceList/targetList looks like this:[{cardId, index}, {cardId, index}]
   const { cardId, sourceListId, targetListId, sourceList, targetList } = req.body;
-
-
+  console.log('exports.moveCard req.body:');
+  console.log(req.body);
 
   if (!targetListId || !targetList) {
     const sourceListResult = await List.findById(sourceListId);

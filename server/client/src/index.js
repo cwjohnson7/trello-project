@@ -27,17 +27,3 @@ root.render(
   // </React.StrictMode>
 );
 
-
-
-//   <React.StrictMode>
-//     <BrowserRouter>
-//       <Header />
-//       <Routes>
-//         <Route path="/" element={<Login />} />
-//         <Route path="/home" element={<HomeScreen />} />
-//         <Route path="/board" element={<Board />} />
-//       </Routes>
-//     </BrowserRouter>
-//   </React.StrictMode>
-// );
-

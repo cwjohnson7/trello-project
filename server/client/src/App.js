@@ -7,11 +7,18 @@ import Login from './components/login-page';
 import HomeScreen from './features/homeScreen/HomeScreen';
 import Board from './features/board/Board';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchUser } from './actions';
+// import { fetchUser } from './actions';
 import Signup from './components/signup-page';
-
+import { getUserBoardsThunk } from './features/homeScreen/HomeScreenSlice';
+import {fetchUser}  from './actions/index';
 
 const App = () => {
+  const token = useSelector(state => state.auth.authenticated);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getUserBoardsThunk({ token }));
+    dispatch(fetchUser());
+  }, []);
 
   return (
     <div className="App">

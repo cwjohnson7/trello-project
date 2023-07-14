@@ -8,6 +8,8 @@ const INITIAL_STATE = {
   lastName: null,
   org: null,
   orgName: null,
+  org: null,
+  orgName: null,
 };
 
 const AuthReducer = (state = INITIAL_STATE, action) => {
@@ -19,6 +21,8 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
         firstName: action.payload.user.firstName,
         lastName: action.payload.user.lastName,
         org: action.payload.user.org,
+        orgName: action.payload.orgName,
+        org: action.payload.user.org,
         orgName: action.payload.orgName
       };
     case SIGN_OUT:
@@ -26,9 +30,9 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
           authenticated: "", 
           email: null, 
           firstName: null, 
-          lastName: null, 
           org: null,
           orgName: null,
+          org: null 
         };
     case AUTH_ERROR:
       return { ...state, errorMessage: action.payload };

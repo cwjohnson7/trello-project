@@ -22,7 +22,7 @@ export const addCardThunk = createThunk(
 export const moveCardThunk = createThunk(
   "homeScreen/moveCardThunk",
   `${apiBaseURL}/api/moveCard`,
-  "PUT"
+  "POST"
 );
 
 export const addListThunk = createThunk(
@@ -352,10 +352,12 @@ export const homeScreenSlice = createSlice({
         state.error = action.payload;
       })
       .addCase(moveCardThunk.pending, (state) => {
+        console.log(`.addCase(moveCardThunk.pending)`);
         state.status = "loading";
         state.error = null;
       })
       .addCase(moveCardThunk.fulfilled, (state, action) => {
+        console.log(`.addCase(moveCardThunk.fullfiled)`);
         state.status = "fulfilled";
         state.error = null;
       })

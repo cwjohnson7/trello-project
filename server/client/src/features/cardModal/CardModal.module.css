@@ -16,6 +16,11 @@
   text-decoration: underline;
 }
 
+.cardDescription {
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
+}
+
 .selectBtn {
   cursor: pointer;
 }

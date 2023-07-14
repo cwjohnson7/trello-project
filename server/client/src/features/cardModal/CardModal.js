@@ -95,7 +95,7 @@ const CardModal = ({ cardId, listId, boardId, visible, onClose }) => {
         </Form.Group>
       </Form>
     ) : (
-      <div onClick={handleDescriptionClick}>{card.description ? card.description : "Add description here"}</div>
+      <div onClick={handleDescriptionClick} className={styles.cardDescription}>{card.description ? card.description : "Add description here"}</div>
     )
   };
 

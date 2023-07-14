@@ -9,12 +9,6 @@ import { useDispatch } from "react-redux";
 
 import { moveCard, listDataSelector, moveCardWithinList, moveCardThunk, updateListName, updateListNameThunk } from "../homeScreen/HomeScreenSlice";
 
-import {
-  moveCard,
-  ,
-  moveCardThunk,
-} from "../homeScreen/HomeScreenSlice";
-
 
 const List = ({ boardId, listId }) => {
   const dispatch = useDispatch();

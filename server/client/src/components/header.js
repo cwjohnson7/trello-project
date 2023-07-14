@@ -32,6 +32,10 @@ const Header = () => {
     }));
   };
 
+  const handleTrelloClick = () => {
+    navigate("/boards");
+  }
+
   const renderLinks = () => {
     if (authenticated) {
       return (
@@ -54,7 +58,9 @@ const Header = () => {
       <Container fluid>
         <Row className="align-items-center">
           <Col md={{ span: 3, offset: 1 }}>
-            <h1 className="display-3"><strong>Trello Jr</strong></h1>
+            <h1 className="display-3">
+              <TrelloJrDiv onClick={handleTrelloClick}>Trello Jr</TrelloJrDiv>
+            </h1>
           </Col>
           {renderLinks()}
         </Row>
@@ -83,6 +89,13 @@ const UserEmailDiv = styled.div`
 
 const SignOutDiv = styled.div`
   font-size: 30px;
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const TrelloJrDiv = styled.div`
+  font-weight: bolder;
   &:hover {
     text-decoration: underline;
   }

@@ -30,10 +30,17 @@ exports.signIn = async function(req, res, next) {
   })
 }
 
-exports.currentUser = function(req, res) {
-  const user = req.user;
-  const token = tokenForUser(req.user);
-  res.send({user, token})
+exports.currentUser = async function(req, res) {
+
+  const id = req.user.org
+  const orgName = await Organization.findById(id)
+  const user = {
+    email: req.user.email,
+    token: tokenForUser(req.user),
+    orgName: orgName.name
+  };
+
+  res.send(user)
 }
 
 exports.signUp = function (req, res, next) {
@@ -66,9 +73,10 @@ exports.signUp = function (req, res, next) {
           lastName: req.body.lastName,
           org: newOrg._id
         });
+        const orgName = newOrg.name;
         user.setPassword(password);
         user.save().then(() => {
-          res.json({ token: tokenForUser(user) })
+          res.json({ token: tokenForUser(user), user, orgName } )
         });
         console.log("NewOrg: ", newOrg);
       } else {
@@ -76,11 +84,12 @@ exports.signUp = function (req, res, next) {
         email: req.body.email,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
-        org: existingOrg._id,
+        org: existingOrg._id
         });
+        const orgName = existingOrg.name;
         user.setPassword(password);
         user.save().then(() => {
-          res.json({ token: tokenForUser(user), user })
+          res.json({ token: tokenForUser(user), user, orgName})
         })
       };
     });

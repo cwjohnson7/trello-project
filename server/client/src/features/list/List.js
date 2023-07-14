@@ -11,6 +11,7 @@ import { moveCard, moveCardWithinList, moveCardThunk, updateListName, updateList
 
 
 const List = ({ boardId, listId }) => {
+  const token = useSelector((state) => state.auth.authenticated);
   const dispatch = useDispatch();
   // return cards and name belonging to current list
   const { cards, listName } = useSelector((state) => {
@@ -97,7 +98,7 @@ const List = ({ boardId, listId }) => {
   // handle ListNameChange for dispatching
   const handleListNameChange = () => {
       dispatch(updateListName({ boardId, listId, updatedListName }));
-      dispatch(updateListNameThunk({ name: updatedListName, boardId, listId}));
+      dispatch(updateListNameThunk({ data: { name: updatedListName, boardId, listId}, token }));
 
       setIsEditing(false);
   };

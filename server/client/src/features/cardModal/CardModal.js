@@ -4,10 +4,11 @@ import { Modal, Button, Container, Row, Col, Form } from "react-bootstrap";
 import AddItem from "../utilities/AddItem";
 import Comment from "../comment/Comment";  
 import styles from "./CardModal.module.css";
-import { updateCardName, updateCardNameThunk, updateCardDescription, updateCardDescriptionThunk, updateCardLabel, updateCardLabelThunk } from "../homeScreen/HomeScreenSlice";
+import { updateCardName, updateCardNameThunk, updateCardDescription, updateCardDescriptionThunk, updateCardLabel, updateCardLabelThunk, removeCard, removeCardThunk } from "../homeScreen/HomeScreenSlice";
 
 
 const CardModal = ({ cardId, listId, boardId, visible, onClose }) => {
+  const token = useSelector((state) => state.auth.authenticated);
   const boards = useSelector((state) => state.homeScreen.boards);
   const board = boards.find(board => board._id === boardId);
   const list = board.lists.find(list => list._id === listId);
@@ -25,7 +26,7 @@ const CardModal = ({ cardId, listId, boardId, visible, onClose }) => {
   // handleCardNameChange for dispatching
   const handleCardNameChange = () => {
     dispatch(updateCardName({ boardId, listId, cardId, updatedCardName }));
-    dispatch(updateCardNameThunk({ name: updatedCardName, boardId, listId, cardId }));
+    dispatch(updateCardNameThunk({ data: { name: updatedCardName, boardId, listId, cardId }, token }));
 
     setCardNameEditing(false);
   };
@@ -71,7 +72,7 @@ const CardModal = ({ cardId, listId, boardId, visible, onClose }) => {
   const handleDescriptionSave = () => {
     // code to add to state
     dispatch(updateCardDescription({ boardId, listId, cardId, updatedDescription }));
-    dispatch(updateCardDescriptionThunk({ boardId, listId, cardId, description: updatedDescription }));
+    dispatch(updateCardDescriptionThunk({ data: { boardId, listId, cardId, description: updatedDescription }, token }));
 
     setDescriptionEditing(false);
   };
@@ -106,8 +107,14 @@ const CardModal = ({ cardId, listId, boardId, visible, onClose }) => {
     updatedCardLabel = e.target.value;
 
     dispatch(updateCardLabel({ boardId, listId, cardId, updatedCardLabel }));
-    dispatch(updateCardLabelThunk({ boardId, listId, cardId, label: updatedCardLabel}));    
+    dispatch(updateCardLabelThunk({ data: { boardId, listId, cardId, label: updatedCardLabel}, token }));    
   };
+
+  // handle archive card
+  const handleArchiveClick = () => {
+    dispatch(removeCard({ boardId, listId, cardId }));
+    dispatch(removeCardThunk({ data: { boardId, listId, cardId }, token }));
+  }
  
   return (
     <div>
@@ -180,7 +187,7 @@ const CardModal = ({ cardId, listId, boardId, visible, onClose }) => {
 
                 {/* Archive button */}
                 <Modal.Title>Actions</Modal.Title>
-                <div className={styles.actionButton}>Archive</div>
+                <div onClick={handleArchiveClick}className={styles.actionButton}>Archive</div>
                 <hr />
                 
               </Col>

@@ -47,7 +47,6 @@ const AddItem = ({ title, boardId, listId, orgId, cardId }) => {
         dispatch(addBoardThunk({ data: { title: inputValue, tempId: _id, orgId }, token }));
         break;
       case 'Comment':
-        console.log(`AddItem Comment Case has following values: ${_id}, ${boardId}, ${listId}, ${cardId}, ${inputValue}`);
         dispatch(addComment({ _id, boardId, listId, cardId, inputValue }));
         dispatch(addCommentThunk({ data: { text: inputValue, tempId: _id, cardId, listId, boardId }, token }));
         break;

@@ -88,7 +88,8 @@ const CardModal = ({ cardId, listId, boardId, visible, onClose }) => {
             placeholder={updatedDescription ? updatedDescription : "Add description here"} 
             value={updatedDescription}
             onChange={e => setUpdatedDescription(e.target.value)}
-            autoFocus/>
+            autoFocus
+            />
           <Button variant="primary" onClick={handleDescriptionSave}>Save Changes</Button>
           <Button variant="secondary" className="ms-1" onClick={handleDecriptionClose}>Close</Button>
         </Form.Group>
@@ -98,26 +99,16 @@ const CardModal = ({ cardId, listId, boardId, visible, onClose }) => {
     )
   };
 
-  // creating local state for card label
-  const [updatedCardLabel, setUpdatedCardLabel] = useState(card.label);
-
-  const handleDispatch = () => {
+  // handling card label change
+  let updatedCardLabel = card.label;
   
-  
-  }
-
   const handleCardLabelChange = (e) => {
-    dispatch(updateCardLabel({ boardId, listId, cardId, updatedCardLabel }));
-    dispatch(updateCardLabelThunk({ boardId, listId, cardId, label: updatedCardLabel}));
+    updatedCardLabel = e.target.value;
 
-    setUpdatedCardLabel(e.target.value);
- 
-    handleDispatch(updateCardLabel);
+    dispatch(updateCardLabel({ boardId, listId, cardId, updatedCardLabel }));
+    dispatch(updateCardLabelThunk({ boardId, listId, cardId, label: updatedCardLabel}));    
   };
  
-  
-
-
   return (
     <div>
       <Modal size="lg" show={visible} onHide={onClose}>

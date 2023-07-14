@@ -6,9 +6,14 @@ import { startDrag, stopDrag } from "../homeScreen/DragDropSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import CardModal from "../cardModal/CardModal";
+import { Row, Col } from "react-bootstrap";
 
 
 const Card = ({ id, name, listId, boardId }) => {
+  const boards = useSelector((state) => state.homeScreen.boards);
+  const board = boards.find(board => board._id === boardId);
+  const list = board.lists.find(list => list._id === listId);
+  const card = list.cards.find(card => card._id === id);
 
   const dispatch = useDispatch();
   const item = { id, name, listId };
@@ -51,7 +56,16 @@ const Card = ({ id, name, listId, boardId }) => {
         style ={{ opacity: isDragging? 0.5 : 1 }} 
         onClick={handleShowModal}
       >
-        {name}
+        <Row>
+          <Col md="auto" className={styles.cardName}>
+          {name}
+          </Col>
+          <Col>
+            <div style={{ backgroundColor: card.label }} className={styles.cardLabel}></div>
+          </Col>
+          
+        </Row>
+        
       </div>
 
       <CardModal 

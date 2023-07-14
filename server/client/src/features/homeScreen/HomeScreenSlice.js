@@ -22,7 +22,7 @@ export const addCardThunk = createThunk(
 export const moveCardThunk = createThunk(
   "homeScreen/moveCardThunk",
   `${apiBaseURL}/api/moveCard`,
-  "PUT"
+  "POST"
 );
 
 export const addListThunk = createThunk(
@@ -141,6 +141,7 @@ export const homeScreenSlice = createSlice({
         _id: action.payload._id,
         org: action.payload.org,
         title: action.payload.inputValue,
+        lists: [],
       });
     },
 

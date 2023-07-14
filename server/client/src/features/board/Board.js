@@ -1,18 +1,28 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import List from '../list/List';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useLocation, matchPath, useNavigate } from 'react-router-dom';
 import AddItem from '../utilities/AddItem';
 import styles from "./Board.module.css";
+import { getUserBoardsThunk } from '../homeScreen/HomeScreenSlice';
+import {fetchUser}  from '../../actions/index';
 
 const Board = () => {
+  const {authenticated, org } = useSelector(state => state.auth);
+  const dispatch = useDispatch();
+  console.log(`org: ${org}, token:${authenticated}`);
+ 
+
   const navigate = useNavigate();
   const boards = useSelector((state) => state.homeScreen.boards);
   const location = useLocation();
   const path = matchPath("/boards/:boardId", location.pathname);
   const pathId = path.params.boardId;
   const board = boards.find(board => board._id === pathId);
-  
+  useEffect(() => {
+    dispatch(getUserBoardsThunk({ authenticated }));
+    dispatch(fetchUser());
+  }, [board]);
 
   const handleBoardButtonClick = () => {
     navigate("/boards")

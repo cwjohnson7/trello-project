@@ -31,6 +31,7 @@ export const signin = (formProps, callback) => dispatch => {
 };
 
 export const fetchUser = () => dispatch => {
+  console.log(`fetchuser is invoked in actions/index.js`);
   const config = {
     headers: {
       Authorization: "Bearer " + localStorage.getItem("token"),

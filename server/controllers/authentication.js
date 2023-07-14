@@ -27,12 +27,9 @@ exports.signIn = function(req, res, next) {
 }
 
 exports.currentUser = function(req, res) {
-  const user = {
-    email: req.user.email,
-    token: tokenForUser(req.user),
-  };
-
-  res.send(user)
+  const user = req.user;
+  const token = tokenForUser(req.user);
+  res.send({user, token})
 }
 
 exports.signUp = function (req, res, next) {

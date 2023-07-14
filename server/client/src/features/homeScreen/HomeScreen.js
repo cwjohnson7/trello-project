@@ -9,6 +9,7 @@ import { useEffect } from "react";
 
 // HomeScreen Component
 const HomeScreen = () => {
+  debugger;
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.authenticated );
   const boards = useSelector((state) => state.homeScreen.boards);
@@ -24,10 +25,7 @@ const HomeScreen = () => {
     dispatch(getUserBoardsThunk({ token }));
   }, [token, dispatch]);
 
-  
-  // function clickHandler() {
-  //   dispatch(getUserBoardsThunk());
-  // }
+
   return(
     <div className={styles.homeScreen}>
       <Container>

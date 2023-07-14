@@ -11,32 +11,33 @@ const requireAuth = passport.authenticate("jwt", { session: false });
 const requireSignin = passport.authenticate("local", { session: false });
 
 module.exports = function(app) {
-  //for existing users to login. can add another post route for /auth/signup if needed.
+  //auth
   app.post('/api/addOrg', Authentication.addOrg)
   app.post('/api/signup', Authentication.signUp)
-  app.post('/api/signin', requireSignin, Authentication.signIn);
+  app.post('/api/signin', requireSignin, Authentication.signIn)
+  app.get('/api/current_user', requireAuth, Authentication.currentUser)
 
-  app.get('/api/current_user', requireAuth, Authentication.currentUser);
-  
-
-  //create a new board
+  //board
+  app.get('/api/getUserBoards', requireAuth, Board.getUserBoards)
   app.post('/api/addBoard', requireAuth, Board.addBoard)
-  //after sigin-in, user gets all boards associated with their org, this is for the homepage
-  app.get('/api/getUserBoards', requireAuth, Board.getUserBoards);
-  // app.get('/api/getUserBoards', Board.getUserBoards);
-
-  //create a new list on a specific board
+  
+  //list
   app.post('/api/addList', requireAuth, List.addList)
   // app.post('/api/moveList', List.moveList)
-
-
-  // add/move/remove a card 
+  app.post('/api/updateListName', requireAuth, List.updateListName)
+  
+  //card
   app.post('/api/addCard', requireAuth, Card.addCard)
-  app.post('/api/addComment', requireAuth, Comment.addComment)
-  app.post('/api/addActivity', requireAuth, Activity.addActivity)
   app.post('/api/moveCard', requireAuth, Card.moveCard)
   app.post('/api/updateCardName', requireAuth, Card.updateCardName)
   app.post('/api/updateCardDescription', requireAuth, Card.updateCardDescription)
+  app.post('/api/updateCardLabel', requireAuth, Card.updateCardLabel)
   app.post('/api/removeCard', requireAuth, Card.removeCard)
+
+  //activity
+  app.post('/api/addActivity', requireAuth, Activity.addActivity)
+
+  //comment
+  app.post('/api/addComment', requireAuth, Comment.addComment)
 
 }

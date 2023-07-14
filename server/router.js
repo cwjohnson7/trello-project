@@ -14,7 +14,7 @@ module.exports = function(app) {
   //for existing users to login. can add another post route for /auth/signup if needed.
   app.post('/api/addOrg', Authentication.addOrg)
   app.post('/api/signup', Authentication.signUp)
-  app.post('/api/signin', requireSignin, Authentication.signIn)
+  app.post('/api/signin', requireSignin, Authentication.signIn);
 
   app.get('/api/current_user', requireAuth, Authentication.currentUser);
   
@@ -22,7 +22,8 @@ module.exports = function(app) {
   //create a new board
   app.post('/api/addBoard', requireAuth, Board.addBoard)
   //after sigin-in, user gets all boards associated with their org, this is for the homepage
-  app.get('/api/getUserBoards', requireAuth, Board.getUserBoards)
+  app.get('/api/getUserBoards', requireAuth, Board.getUserBoards);
+  // app.get('/api/getUserBoards', Board.getUserBoards);
 
   //create a new list on a specific board
   app.post('/api/addList', requireAuth, List.addList)

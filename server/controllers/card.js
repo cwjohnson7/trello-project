@@ -5,7 +5,6 @@ const Board = require("../models/board");
 exports.addCard = function (req, res, next) {
   const { name, description, tempId, listId, boardId } = req.body;
   const id = req.body.listId;
-  
   List.findById(id)
   .then((result) => {
     const card = new Card({

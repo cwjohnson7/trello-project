@@ -17,7 +17,6 @@ const localLogin = new LocalStrategy(localOptions, function(email, password, don
     if (!user.validPassword(password)) {
       return done(null, false, { message: "Incorrect password." })
     }
-
     return done(null, user);
   })
 });

@@ -18,10 +18,11 @@ exports.addOrg = function (req, res) {
   res.send(newOrg);
 };
 
-exports.signIn = async function(req, res, next) {
+exports.signIn = function(req, res, next) {
+  const user = req.user;
   res.send({
-    token: tokenForUser(req.user),
-    /*boards*/
+    token: tokenForUser(user),
+    user: user
   })
 }
 
@@ -48,7 +49,6 @@ exports.signUp = function (req, res, next) {
     if (err) {
       return next(err);
     }
-
     // If a user with email does exist, return an error
     if (result) {
       return res.status(422).send({ error: "Email is in use" });
@@ -79,7 +79,7 @@ exports.signUp = function (req, res, next) {
         });
         user.setPassword(password);
         user.save().then(() => {
-          res.json({ token: tokenForUser(user) })
+          res.json({ token: tokenForUser(user), user })
         })
       };
     });

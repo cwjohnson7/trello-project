@@ -1,43 +1,45 @@
-import React from "react";
+import React, { useRef, useEffect, useImperativeHandle } from "react";
+import styled from "styled-components";
 import { useDrag } from "react-dnd";
 import ItemTypes from "../utilities/ItemTypes";
-import styles from "./Card.module.css"; 
+import styles from "./Card.module.css";
 import { startDrag, stopDrag } from "../homeScreen/DragDropSlice";
+import { moveCardWithinList} from "../homeScreen/HomeScreenSlice";
+import { Button } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import CardModal from "../cardModal/CardModal";
 
-
-const Card = ({ id, name, listId, boardId }) => {
-
+const Card = ({ id, name, listId, index, boardId }) => {
   const dispatch = useDispatch();
-  const item = { id, name, listId };
+  // create a reference to dom node of Card component in order to determine its height:
+  const CardContainerRef = useRef(null);
+  // use local state to track Card height to calculate card index changes as card is being moved
+  const [cardHeight, setCardHeight] = useState(null);
+  useEffect(() => {
+    if (CardContainerRef.current) {
+      setCardHeight(CardContainerRef.current.offsetHeight);
+    }
+  }, [CardContainerRef.current]);
+
+  // FOLLOWING CODE IS USED FOR RDND FUNCTIONALITY
+  const item = { id, name, listId, boardId, index, cardHeight };
   // connect Card to monitors state of React Drag and Drop via useDrag hook
-  const [{ isDragging }, drag] = useDrag(() => ({
-    type: ItemTypes.CARD,
-    item,
-    collect: (monitor, props) => ({
-      isDragging: !!monitor.isDragging(),
-    }),
-    // when drag operation begins following function is invoked
-    // begin: (monitor) => {
-    //   dispatch(startDrag(item)); // You may also want to include other properties such as initial listId
-    // },
-    //when drag operation ends:
-    end: (item, monitor) => {
-      if (!monitor.didDrop()) {
-        // If the item was not dropped into a target, don't do anything
-        return;
-      }
-      const dropResult = monitor.getDropResult();
-      dispatch(stopDrag({id, listId: dropResult.listId})); 
-    },
-  }));
-    // // start drag operation:
-    // if(isDragging) dispatch(startDrag(item));
+  const [{ isDragging }, drag] = useDrag(() => {
+    const item = { id, name, listId, boardId, index, cardHeight };
+    return {
+      type: ItemTypes.CARD,
+      item,
+      collect: (monitor, props) => ({
+        isDragging: !!monitor.isDragging(),
+      }),
+    };
+  }, [id, name, listId, boardId, index, cardHeight]);
 
 
-// create local state and functions for displaying modals for each card
+  // create local state and functions for displaying modals for each card
   const [showModal, setShowModal] = useState(false);
   const handleShowModal = () => setShowModal(!showModal);
 

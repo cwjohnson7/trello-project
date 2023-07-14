@@ -7,9 +7,6 @@ const mongoose  = require('mongoose');
 const cors = require('cors');
 const keys = require('./config/keys');
 
-
-//the path to the mongodb URI will eventually be referenced as keys.MONGODB_URI
-//in /server/config/keys.js
 mongoose.connect(keys.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,

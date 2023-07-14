@@ -4,6 +4,7 @@ import { NavLink, Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Fragment } from "react";
 import { signout } from "../actions";
+import { signOutHomeScreenSlice } from "../features/homeScreen/HomeScreenSlice";
 import { useEffect } from "react";
 import { fetchUser } from "../actions";
 
@@ -23,6 +24,7 @@ const Header = () => {
   const email = useSelector(state => state.auth.email);
   
   const handleSignOutClick = () => {
+    dispatch(signOutHomeScreenSlice());
     dispatch(signout(() => {
       navigate("/");
     }));

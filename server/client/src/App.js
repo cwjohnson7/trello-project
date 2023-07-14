@@ -13,16 +13,6 @@ import Signup from './components/signup-page';
 
 const App = () => {
 
-  const dispatch = useDispatch();
-  const authenticated = useSelector(state => state.auth.authenticated);
-
-  useEffect(() => {
-    if (authenticated) {
-      dispatch(fetchUser());
-    }
-  }, [authenticated, dispatch])
-
-
   return (
     <div className="App">
 				<DndProvider backend={HTML5Backend}>
@@ -41,16 +31,6 @@ const App = () => {
   );
 
 
-//     <BrowserRouter>
-//       <Header />
-//       <Routes>
-//         <Route path="/" element={<Login />} />
-//         <Route path="/home" element={<HomeScreen />} />
-//         <Route path="/board" element={<Board />} />
-//       </Routes>
-//     </BrowserRouter>
-//  
-// );
 
 }
 

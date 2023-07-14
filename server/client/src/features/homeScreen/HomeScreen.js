@@ -1,14 +1,18 @@
 import styled from "styled-components";
 import { Container, Card, Row, Col } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import AddItem from "../utilities/AddItem";
 import styles from "./HomeScreen.module.css";
+import { getUserBoardsThunk } from "./HomeScreenSlice";
+import { useEffect } from "react";
 
 // HomeScreen Component
 const HomeScreen = () => {
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.auth.authenticated );
   const boards = useSelector((state) => state.homeScreen.boards);
-  const { orgId, orgName } = useSelector((state) => state.homeScreen.user);
+  const org  = useSelector((state) => state.auth.org);
 
   const navigate = useNavigate();
 
@@ -16,11 +20,18 @@ const HomeScreen = () => {
     const boardId = e.currentTarget.id;
     navigate(`/boards/${boardId}`);
   }
+  useEffect(() => {
+    dispatch(getUserBoardsThunk({ token }));
+  }, [token, dispatch]);
 
+  
+  // function clickHandler() {
+  //   dispatch(getUserBoardsThunk());
+  // }
   return(
     <div className={styles.homeScreen}>
       <Container>
-        <h2> {orgName} Workspace</h2>
+        <h2>  Workspace id: {org} </h2>
         <hr />
 
         <Row>
@@ -36,9 +47,9 @@ const HomeScreen = () => {
           ))} 
              
         </Row>
- 
-        <AddItem title="Board" orgId={orgId} />
-               
+        
+        <AddItem title="Board" orgId={org} />
+        
       </Container>
     </div>
   )

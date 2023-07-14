@@ -10,8 +10,8 @@
     "devStart": "nodemon index.js"
   },
   "engines": {
-    "node": "10.0.0",
-    "npm": "5.1.0"
+    "node": "18.14.2",
+    "npm": "9.5.0"
   },
   "author": "",
   "license": "ISC",

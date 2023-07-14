@@ -10,9 +10,6 @@ import {fetchUser}  from '../../actions/index';
 const Board = () => {
   const {authenticated, org } = useSelector(state => state.auth);
   const dispatch = useDispatch();
-  console.log(`org: ${org}, token:${authenticated}`);
- 
-
   const navigate = useNavigate();
   const boards = useSelector((state) => state.homeScreen.boards);
   const location = useLocation();

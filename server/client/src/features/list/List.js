@@ -7,7 +7,7 @@ import { useDrop } from "react-dnd";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 
-import { moveCard, listDataSelector, moveCardWithinList, moveCardThunk, updateListName, updateListNameThunk } from "../homeScreen/HomeScreenSlice";
+import { moveCard, moveCardWithinList, moveCardThunk, updateListName, updateListNameThunk } from "../homeScreen/HomeScreenSlice";
 
 
 const List = ({ boardId, listId }) => {
@@ -44,7 +44,6 @@ const List = ({ boardId, listId }) => {
       let newIndex;
       const delta = monitor.getDifferenceFromInitialOffset();
       let moveY = Math.round(delta.y / item.cardHeight);
-      console.log(`moveY is ${moveY}`);
 
       // The card is being moved within the same list
       if (item.listId === listId) {
@@ -65,6 +64,7 @@ const List = ({ boardId, listId }) => {
         );
       } else {
         // card is moved to a different list, add to the end of targetList
+        console.log(`List:68 else block is invoked!`);
         dispatch(
           moveCard({
             boardId,

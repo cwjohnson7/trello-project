@@ -6,7 +6,8 @@ const INITIAL_STATE = {
   email: null,
   firstName: null,
   lastName: null,
-  org: null
+  org: null,
+  orgName: null,
 };
 
 const AuthReducer = (state = INITIAL_STATE, action) => {
@@ -17,7 +18,8 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
         email: action.payload.user.email,
         firstName: action.payload.user.firstName,
         lastName: action.payload.user.lastName,
-        org: action.payload.user.org
+        org: action.payload.user.org,
+        orgName: action.payload.orgName
       };
     case SIGN_OUT:
         return { ...state, 
@@ -25,7 +27,8 @@ const AuthReducer = (state = INITIAL_STATE, action) => {
           email: null, 
           firstName: null, 
           lastName: null, 
-          org: null 
+          org: null,
+          orgName: null 
         };
     case AUTH_ERROR:
       return { ...state, errorMessage: action.payload };

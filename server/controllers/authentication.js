@@ -18,11 +18,15 @@ exports.addOrg = function (req, res) {
   res.send(newOrg);
 };
 
-exports.signIn = function(req, res, next) {
+exports.signIn = async function(req, res, next) {
   const user = req.user;
+  const id = req.user.org
+  const orgName = await Organization.findById(id)
+
   res.send({
     token: tokenForUser(user),
-    user: user
+    user: user,
+    orgName: orgName.name
   })
 }
 

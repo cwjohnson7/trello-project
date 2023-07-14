@@ -2,9 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import createThunk from "../utilities/createThunk";
 const apiBaseURL = process.env.REACT_APP_API_URL;
 
-
 const initialState = {
-  user: {},
   boards: []
 };
 
@@ -49,6 +47,9 @@ export const homeScreenSlice = createSlice({
   name: "homeScreen",
   initialState,
   reducers: {
+    signOutHomeScreenSlice: (state) => {
+      return initialState;
+    },
     moveCard: (state, action) => {
       const { boardId, sourceListId, targetListId, cardId } = action.payload;
 
@@ -120,6 +121,8 @@ export const homeScreenSlice = createSlice({
       const board = state.boards.find(
         (board) => board._id === action.payload.boardId
       );
+      console.log(`below is redux board from addList reducer:`)
+      console.log(board);
       if (!board) {
         console.log("no board found inside addList reducer!");
         return;
@@ -257,6 +260,7 @@ export const homeScreenSlice = createSlice({
         state.error = null;
       })
       .addCase(addBoardThunk.fulfilled, (state, action) => {
+        console.log(action.payload);
         const {tempId, board } = action.payload;
         state.status = "fulfilled";
         state.error = null;
@@ -309,7 +313,7 @@ export const homeScreenSlice = createSlice({
   },
 });
 
-export const { moveCard, moveCardWithinList, addCard, addList, addBoard, addComment } =
+export const { moveCard, moveCardWithinList, addCard, addList, addBoard, addComment, signOutHomeScreenSlice } =
   homeScreenSlice.actions;
 
 export default homeScreenSlice.reducer;

@@ -2,10 +2,13 @@ const Board = require("../models/board");
 const Organization = require("../models/organization");
 
 exports.addBoard = async function (req, res, next) {
+
   const { title, tempId, orgId } = req.body;
   console.log(
     `exports.addBoard is invoked with following values from dispatch(addBoardThunk): title: ${title} tempId: ${tempId} orgId: ${orgId}`
   );
+  console.log(req.body);
+  console.log(req.user);
   // for testing purposes while we do not have auth build out, we'll create an epty board and send it back for user to populate redux state with to get us a starting point of testing full stack
   if (!orgId) {
     try {
@@ -37,15 +40,8 @@ exports.addBoard = async function (req, res, next) {
 };
 
 exports.getUserBoards = async function (req, res, next) {
-  const { orgId } = req.body;
+  const orgId = req.user.org;
   // for testing purposes while we do not have auth build out, we'll create an epty board and send it back for user to populate redux state with to get us a starting point of testing full stack
-  if (!orgId) {
-    const board = new Board({
-      title: "TEST BOARD",
-    });
-    await board.save();
-    res.send({ boards: [board] });
-  } else {
     const boards = await Board.find({ org: orgId }).populate({
       path: "lists",
       model: "list",
@@ -65,5 +61,4 @@ exports.getUserBoards = async function (req, res, next) {
       },
     });
     res.send({ boards });
-  }
-};
+  };

@@ -1,10 +1,10 @@
 import axios from "axios";
 import { AUTH_USER, AUTH_ERROR, SIGN_OUT } from "./types";
-
+const base_URL = 'https://trello-jr.onrender.com';
 export const signup = (formProps, callback) => dispatch => {
   axios.post(
     // localhost will need to change
-    "/api/signup",
+    base_URL +"/api/signup",
     formProps
   ).then(function (response) {
     dispatch({ type: AUTH_USER, payload: response.data });
@@ -18,7 +18,7 @@ export const signup = (formProps, callback) => dispatch => {
 
 export const signin = (formProps, callback) => dispatch => {
   axios.post(
-    "/api/signin",
+    base_URL + "/api/signin",
     formProps
   ).then(function (response) {
     dispatch({ type: AUTH_USER, payload: response.data });
@@ -38,7 +38,7 @@ export const fetchUser = () => dispatch => {
   };
 
   axios
-    .get("/api/current_user", config)
+    .get(base_URL + "/api/current_user", config)
     .then(function (response) {
       dispatch({ type: AUTH_USER, payload: response.data });
       localStorage.setItem("token", response.data.token);
